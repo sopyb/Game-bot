@@ -3,10 +3,7 @@ class Matrix {
         if (!obj) obj = 0
         this.data = new Array(row)
         for (let i = 0; i < row; i++) {
-            this.data[i] = new Array(col);
-            for (let j = 0; j < col; j++) {
-                this.data[i][j] = 0;
-            }
+            this.data[i] = new Array(col).fill(obj || 0);
         }
     }
 
