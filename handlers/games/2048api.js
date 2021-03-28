@@ -5,9 +5,15 @@ const { Matrix } = require('../../utils/matrix'),
 class Game {
     constructor(options) {
         this.board = new Matrix(4, 4);
-        this.score = 0
-        this.highestblock = 0
-        this.state = {ongoing: true, won: false, lost: false}
+        this.allowedMoves = {
+            left: true,
+            right: true,
+            up: true,
+            down: true
+        };
+        this.highestblock = 0;
+        this.score = 0;
+        this.state = {ongoing: true, won: false, lost: false};
         if (options.debug) this.debug = true;
     }
 
@@ -58,10 +64,11 @@ class Game {
 
         
         if (this.debug) console.log(`${colors.purple}Debug:${reset} summonBlock: Setting block on board at ${colors.green}X=${x} Y=${y}${reset} to ${colors.green}value ${value}${reset}.`);
-        this.board.data[y][x] = value
-        if (this.board.highestblock < value) {
+        this.board.data[y][x] = value;
+        this.allowedMoves = this.checkMovement();
+        if (this.highestblock < value) {
             if (this.debug) console.log(`${colors.purple}Debug:${reset} New highest block updating ${colors.green}highestblock to ${value}${reset}.`);
-            this.board.highestblock = value;
+            this.highestblock = value;
         }
     }
 
@@ -75,6 +82,9 @@ class Game {
     }
 
     moveLeft() {
+        console.log(this);
+        console.log(this.allowedMoves)
+        if (!this.allowedMoves.left) return;
         if (this.debug) console.log(`${colors.purple}Debug:${reset} moveLeft: Started moving blocks left.`);
         for (let y = 0; y < this.board.data.length; y++) {
             this.board.moveLeft(y)
@@ -86,9 +96,9 @@ class Game {
                     this.board.data[y][x] += this.board.data[y][x + 1];
                     this.board.data[y][x + 1] = 0;
                     this.score += this.board.data[y][x];
-                    if (this.board.highestblock < this.board.data[y][x]) {
-                        if (this.debug) console.log(`${colors.purple}Debug:${reset} New highest block updating ${colors.green}highestblock to ${value}${reset}.`);
-                        this.board.highestblock = this.board.data[y][x];
+                    if (this.highestblock < this.board.data[y][x]) {
+                        if (this.debug) console.log(`${colors.purple}Debug:${reset} New highest block updating ${colors.green}highestblock to ${this.board.data[y][x]}${reset}.`);
+                        this.highestblock = this.board.data[y][x];
                     }
                     x++;
                     if (!change) change = true;
@@ -97,10 +107,16 @@ class Game {
             if (change) this.board.moveLeft(y)
             if (this.debug) console.log(`${colors.purple}Debug:${reset} moveLeft: Moved and merged elements to the left at ${colors.green}Y=${y} (${this.board.data[y] || `Data missing`})${reset}.`);
         }
-        this.summonBlock();
+        this.allowedMoves = this.checkMovement()
+        if (Object.keys(this.allowedMoves).map(k => this.allowedMoves[k]).filter(k => k).length) { 
+            this.summonBlock();
+        } else {
+            this.state.ongoing = false
+        }
     }
 
     moveRight() {
+        if (!this.allowedMoves.right) return;
         if (this.debug) console.log(`${colors.purple}Debug:${reset} moveRight: Started moving blocks right.`);
         for (let y = 0; y < this.board.data.length; y++) {
             this.board.moveRight(y)
@@ -112,9 +128,9 @@ class Game {
                     this.board.data[y][x] += this.board.data[y][x - 1];
                     this.board.data[y][x - 1] = 0;
                     this.score += this.board.data[y][x];
-                    if (this.board.highestblock < this.board.data[y][x]) {
-                        if (this.debug) console.log(`${colors.purple}Debug:${reset} New highest block updating ${colors.green}highestblock to ${value}${reset}.`);
-                        this.board.highestblock = this.board.data[y][x];
+                    if (this.highestblock < this.board.data[y][x]) {
+                        if (this.debug) console.log(`${colors.purple}Debug:${reset} New highest block updating ${colors.green}highestblock to ${this.board.data[y][x]}${reset}.`);
+                        this.highestblock = this.board.data[y][x];
                     }
                     x--;
                     if (!change) change = true;
@@ -123,10 +139,16 @@ class Game {
             if (change) this.board.moveRight(y)
             if (this.debug) console.log(`${colors.purple}Debug:${reset} moveRight: Moved and merged elements to the left at ${colors.green}Y=${y} (${this.board.data[y] || `Data missing`})${reset}.`);
         }
-        this.summonBlock();
+        this.allowedMoves = this.checkMovement()
+        if (Object.keys(this.allowedMoves).map(k => this.allowedMoves[k]).filter(k => k).length) { 
+            this.summonBlock();
+        } else {
+            this.state.ongoing = false
+        }
     }
 
     moveUp() {
+        if (!this.allowedMoves.up) return;
         if (this.debug) console.log(`${colors.purple}Debug:${reset} moveUp: Started moving blocks up.`);
         for (let x = 0; x < this.board.data[0].length; x++) {
             this.board.moveUp(x)
@@ -138,9 +160,9 @@ class Game {
                     this.board.data[y][x] += this.board.data[y + 1][x];
                     this.board.data[y + 1][x] = 0;
                     this.score += this.board.data[y][x];
-                    if (this.board.highestblock < this.board.data[y][x]) {
-                        if (this.debug) console.log(`${colors.purple}Debug:${reset} New highest block updating ${colors.green}highestblock to ${value}${reset}.`);
-                        this.board.highestblock = this.board.data[y][x];
+                    if (this.highestblock < this.board.data[y][x]) {
+                        if (this.debug) console.log(`${colors.purple}Debug:${reset} New highest block updating ${colors.green}highestblock to ${this.board.data[y][x]}${reset}.`);
+                        this.highestblock = this.board.data[y][x];
                     };
                     y++;
                     if (!change) change = true;
@@ -149,10 +171,16 @@ class Game {
             if (change) this.board.moveUp(x)
             if (this.debug) console.log(`${colors.purple}Debug:${reset} moveUp: Moved and merged elements up at ${colors.green} X=${x} (${/*data representation || */`Data missing`})${reset}.`);
         }
-        this.summonBlock();
+        this.allowedMoves = this.checkMovement()
+        if (Object.keys(this.allowedMoves).map(k => this.allowedMoves[k]).filter(k => k).length) { 
+            this.summonBlock();
+        } else {
+            this.state.ongoing = false
+        }
     }
 
     moveDown() {
+        if (!this.allowedMoves.down) return;
         if (this.debug) console.log(`${colors.purple}Debug:${reset} moveDown: Started moving blocks down.`);
         for (let x = 0; x < this.board.data[0].length; x++) {
             this.board.moveDown(x)
@@ -163,29 +191,33 @@ class Game {
                     this.board.data[y][x] += this.board.data[y - 1][x];
                     this.board.data[y - 1][x] = 0;
                     this.score += this.board.data[y][x];
-                    if (this.board.highestblock < this.board.data[y][x]) {
-                        if (this.debug) console.log(`${colors.purple}Debug:${reset} New highest block updating ${colors.green}highestblock to ${value}${reset}.`);
-                        this.board.highestblock = this.board.data[y][x];
+                    if (this.highestblock < this.board.data[y][x]) {
+                        if (this.debug) console.log(`${colors.purple}Debug:${reset} New highest block updating ${colors.green}highestblock to ${this.board.data[y][x]}${reset}.`);
+                        this.highestblock = this.board.data[y][x];
                     };
                     y--;
                     if (!change) change = true;
                 }
             }
             if (change) this.board.moveDown(x);
-            if (this.debug) console.log(`${colors.purple}Debug:${reset} moveDown: Moved and merged elements down at ${colors.green}X=${x} (${/*data representation || */`Data missing`})${reset}.`);
+            if (this.debug) console.log(`${colors.purple}Debug:${reset} moveDown: Moved and merged elements down at ${colors.green}X=${x} (${/*data representation || */`Data missing`})${reset}.`)
         }
-        this.summonBlock();
+        this.allowedMoves = this.checkMovement()
+        if (Object.keys(this.allowedMoves).map(k => this.allowedMoves[k]).filter(k => k).length) { 
+            this.summonBlock();
+        } else {
+            this.state.ongoing = false
+        }
     }
 
     checkMovement() {
-        let data = this.board.data
-        let allowedMoves = {
-            left: false,
-            right: false,
-            up: false,
-            down: false
-        }
-
+        let data = this.board.data,
+            allowedMoves = {
+                left: false,
+                right: false,
+                up: false,
+                down: false
+            };
         
         // checking the x axis for left/right move validation
         if(this.debug) console.log(`${colors.purple}Debug:${reset} checkMovement: Checking the left/right availability on the x axis`)
@@ -214,8 +246,39 @@ class Game {
                     
                 }
             }
+            // if both have been already validated break the loop
+            if (allowedMoves.left && allowedMoves.right) break;
         }
         if(this.debug) console.log(`${colors.purple}Debug:${reset} checkMovement: Done searching x axis moving left ${colors.green + allowedMoves.left ? `allowed` : `forbidden`+reset}, moving right ${colors.green + allowedMoves.right ? `allowed` : `forbidden`+reset}`)
+
+        // checking the y axis for up/down move validation
+        if(this.debug) console.log(`${colors.purple}Debug:${reset} checkMovement: Checking the up/down availability on the y axis`)
+        for(let x = 0; x < data[0].length; x++) {
+            //check if the sides are empty
+            if (data[0][x] && !allowedMoves.up) allowedMoves.up = true;
+            if (data[data.length-1][x] && !allowedMoves.down) allowedMoves.down = true;
+
+            for (let y = 1; y < data.length - 1; y++) {
+                //check for open spots in the middle
+                if (!data[y][x]) {
+                    if (!allowedMoves.up) allowedMoves.up = true
+                    if (!allowedMoves.down) allowedMoves.down = true
+                    break;
+                }
+
+                //check if blocks can be merged
+                if (data[y][x] === data[y - 1][x] || data[y][x] === data[y + 1][x]) { 
+                    if (!allowedMoves.up) allowedMoves.up = true
+                    if (!allowedMoves.down) allowedMoves.down = true
+                    break;
+                }
+            }
+            // if both have been already validated break the loop
+            if (allowedMoves.up && allowedMoves.down) break;
+        }
+        if(this.debug) console.log(`${colors.purple}Debug:${reset} checkMovement: Done searching x axis moving up ${colors.green + allowedMoves.up ? `allowed` : `forbidden`+reset}, moving down ${colors.green + allowedMoves.down ? `allowed` : `forbidden`+reset}`)
+        this.allowedMoves = allowedMoves;
+        return allowedMoves;
     }
 }
 
