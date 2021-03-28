@@ -82,10 +82,9 @@ class Game {
             //merging left
             let change = false;
             for (let x = 0; x < this.board.data[y].length-1; x++) {
-                let mergeX = x++;
-                if (this.board.data[y][x] === this.board.data[y][mergeX] != 0) {
-                    this.board.data[y][x] += this.board.data[y][mergeX];
-                    this.board.data[y][mergeX] = 0;
+                if (this.board.data[y][x] === this.board.data[y][x + 1] != 0) {
+                    this.board.data[y][x] += this.board.data[y][x + 1];
+                    this.board.data[y][x + 1] = 0;
                     this.score += this.board.data[y][x];
                     if (this.board.highestblock < this.board.data[y][x]) {
                         if (this.debug) console.log(`${colors.purple}Debug:${reset} New highest block updating ${colors.green}highestblock to ${value}${reset}.`);
@@ -109,10 +108,9 @@ class Game {
             //merging right
             let change = false;
             for (let x = this.board.data[y].length-1; x > 1; x--) {
-                let mergeX = x--;
-                if (this.board.data[y][x] === this.board.data[y][mergeX] != 0) {
-                    this.board.data[y][x] += this.board.data[y][mergeX];
-                    this.board.data[y][mergeX] = 0;
+                if (this.board.data[y][x] === this.board.data[y][x - 1] != 0) {
+                    this.board.data[y][x] += this.board.data[y][x - 1];
+                    this.board.data[y][x - 1] = 0;
                     this.score += this.board.data[y][x];
                     if (this.board.highestblock < this.board.data[y][x]) {
                         if (this.debug) console.log(`${colors.purple}Debug:${reset} New highest block updating ${colors.green}highestblock to ${value}${reset}.`);
@@ -136,17 +134,16 @@ class Game {
             //merging up
             let change = false;
             for (let y = 0; y < this.board.data.length - 1; y++) {
-                let mergeY = y++
-                if (this.board.data[y][x] === this.board.data[mergeY][x] != 0) {
-                    this.board.data[y][x] += this.board.data[mergeY][x];
-                    this.board.data[mergeY][x] = 0;
+                if (this.board.data[y][x] === this.board.data[y + 1][x] != 0) {
+                    this.board.data[y][x] += this.board.data[y + 1][x];
+                    this.board.data[y + 1][x] = 0;
                     this.score += this.board.data[y][x];
                     if (this.board.highestblock < this.board.data[y][x]) {
                         if (this.debug) console.log(`${colors.purple}Debug:${reset} New highest block updating ${colors.green}highestblock to ${value}${reset}.`);
                         this.board.highestblock = this.board.data[y][x];
                     };
                     y++;
-                    if(!change) change = true;
+                    if (!change) change = true;
                 }
             }
             if (change) this.board.moveUp(x)
@@ -162,17 +159,16 @@ class Game {
             //merging up
             let change = false;
             for (let y = this.board.data.length - 1; y > 1; y--) {
-                let mergeY = y--
-                if (this.board.data[y][x] === this.board.data[mergeY][x] != 0) {
-                    this.board.data[y][x] += this.board.data[mergeY][x];
-                    this.board.data[mergeY][x] = 0;
+                if (this.board.data[y][x] === this.board.data[y - 1][x] != 0) {
+                    this.board.data[y][x] += this.board.data[y - 1][x];
+                    this.board.data[y - 1][x] = 0;
                     this.score += this.board.data[y][x];
                     if (this.board.highestblock < this.board.data[y][x]) {
                         if (this.debug) console.log(`${colors.purple}Debug:${reset} New highest block updating ${colors.green}highestblock to ${value}${reset}.`);
                         this.board.highestblock = this.board.data[y][x];
                     };
                     y--;
-                    if(!change) change = true;
+                    if (!change) change = true;
                 }
             }
             if (change) this.board.moveDown(x);
@@ -192,9 +188,34 @@ class Game {
 
         
         // checking the x axis for left/right move validation
+        if(this.debug) console.log(`${colors.purple}Debug:${reset} checkMovement: Checking the left/right availability on the x axis`)
         for (let y = 0; y < data.length; y++) {
-            //come back here once you do the block merging
+            //check if the sides are empty
+            if (data[y][0] && !allowedMoves.left) allowedMoves.left = true;
+            if (data[y][data[y].length-1] && !allowedMoves.right) allowedMoves.right = true;
+
+            //if not check blocks in the middle
+            if (!allowedMoves.left || !allowedMoves.right) {
+
+                for (let x = 1; x < data[y].length-1; x++) {
+                    //if empty block in the middle move allowed
+                    if (!data[y][x]) {
+                        if (!allowedMoves.left) allowedMoves.left = true
+                        if (!allowedMoves.right) allowedMoves.right = true
+                        break;
+                    }
+
+                    //check if blocks can be merged
+                    if (data[y][x] === data[y][x-1] || data[y][x] === data[y][x+1]) { // no need for !=0 checked 
+                        if (!allowedMoves.left) allowedMoves.left = true
+                        if (!allowedMoves.right) allowedMoves.right = true
+                        break;
+                    }
+                    
+                }
+            }
         }
+        if(this.debug) console.log(`${colors.purple}Debug:${reset} checkMovement: Done searching x axis moving left ${colors.green + allowedMoves.left ? `allowed` : `forbidden`+reset}, moving right ${colors.green + allowedMoves.right ? `allowed` : `forbidden`+reset}`)
     }
 }
 
