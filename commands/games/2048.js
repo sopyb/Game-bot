@@ -1,4 +1,4 @@
-const { Game } = require('../../handlers/2048api'),    //Yes... I gave up running into errors for 7h straight with my own api
+const { Game } = require('../../handlers/games/2048api'),    //Yes... I gave up running into errors for 7h straight with my own api
     { MessageEmbed } = require('discord.js');  // maybe... I will go back at it (why do I hate myself)
 
 function render(board) {
