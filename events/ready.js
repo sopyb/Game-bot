@@ -1,7 +1,8 @@
 const { colors, format, reset } = require('../utils/clformat');
 
 function changeStatus() {
-    let status = client.config.activity[Math.floor(Math.random * (client.config.activity.length -1))];
+    let random = Math.floor(Math.random() * (client.config.activity.length - 1))
+    let status = client.config.activity[random];
 
     client.user.setActivity(status.text, {type: status.type})
 }
