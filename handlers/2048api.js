@@ -47,17 +47,12 @@ class Game {
                 openYcoords.push(spot.y)
             }
         }
-        y = openYcoords[Math.floor(Math.random()*openYcoords.length-1)]
+        y = openYcoords[Math.floor(Math.random()*(openYcoords.length-1))]
 
         if (this.debug) console.log(`${colors.purple}Debug:${reset} summonBlock: Generating X coordinate based on free spots at ${colors.green}Y=${y}${reset}.`)
         //determine X pos of block
-        let openXcoords = new Array();
-        for (let spot of freeSpots) {
-            if (spot.y === y) {
-                openXcoords.push(spot.x)
-            }
-        }
-        x = openXcoords[Math.floor(Math.random()*openXcoords.length-1)]
+        let openXcoords = freeSpots.filter(k => k.y === y).map(k => k.x);
+        x = openXcoords[Math.floor(Math.random()*(openXcoords.length-1))]
 
         if (this.debug) console.log(`${colors.purple}Debug:${reset} summonBlock: Generating block value.`)
         value = Math.random() < 0.9 ? 2 : 4;
@@ -83,16 +78,17 @@ class Game {
 
             //merging left
             let change = false;
-            for (let x = 0; this.board.data[y].length-1; x++) {
+            for (let x = 0; x < this.board.data[y].length-1; x++) {
                 let mergeX = x++;
                 if (this.board.data[y][x] === this.board.data[y][mergeX] != 0) {
                     this.board.data[y][x] += this.board.data[y][mergeX];
+                    this.board.data[y][mergeX] = 0;
                     x++;
                     if (!change) change = true;
                 }
             }
-            if (change) this.board.moveLeft()
-            if (this.debug) console.log(`${colors.purple}Debug:${reset} moveLeft: Moved to the left and merged elements at ${colors.green}Y=${y} (${this.board.data[y]})${reset}.`);
+            if (change) this.board.moveLeft(y)
+            if (this.debug) console.log(`${colors.purple}Debug:${reset} moveLeft: Moved to the left and merged elements at ${colors.green}Y=${y} (${this.board.data[y] || `Data missing`})${reset}.`);
         }
     }
 
@@ -101,18 +97,19 @@ class Game {
         for (let y = 0; y < this.board.data.length; y++) {
             this.board.moveRight(y)
 
-            //merging left
+            //merging right
             let change = false;
-            for (let x = this.board.data[y].length; x > 1; x--) {
+            for (let x = this.board.data[y].length-1; x > 1; x--) {
                 let mergeX = x--;
                 if (this.board.data[y][x] === this.board.data[y][mergeX] != 0) {
                     this.board.data[y][x] += this.board.data[y][mergeX];
+                    this.board.data[y][mergeX] = 0;
                     x--;
                     if (!change) change = true;
                 }
             }
-            if (change) this.board.moveRight()
-            if (this.debug) console.log(`${colors.purple}Debug:${reset} moveLeft: Moved to the right elements at ${colors.green}Y=${y} (${this.board.data[y]})${reset}.`);
+            if (change) this.board.moveRight(y)
+            if (this.debug) console.log(`${colors.purple}Debug:${reset} moveRight: Moved to the right elements at ${colors.green}Y=${y} (${this.board.data[y] || `Data missing`})${reset}.`);
 
         }
     }
