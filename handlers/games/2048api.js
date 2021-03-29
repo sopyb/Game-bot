@@ -14,12 +14,15 @@ class Game {
         this.highestblock = 0;
         this.score = 0;
         this.state = {ongoing: true, won: false};
-        if (options.debug) this.debug = true;
+        if (typeof options.debug === Boolean) {this.debug = options.debug} else this.debug = false;
+        if (typeof options.start === Number) {start(options.summon)} else start(2);
     }
 
-    start() {
+    start(blocks) {
         if (this.debug) console.log(`${colors.purple}Debug:${reset} start: Generating start blocks.`);
-        this.summonBlock(); this.summonBlock();
+        for (blocks; blocks !=0; blocks--) {
+            this.summonBlock();
+        }
         if (this.debug) { 
             console.log(`${colors.purple}Debug:${reset} start: Blocks generated. Board state:`);
             console.log(this.board.data)
