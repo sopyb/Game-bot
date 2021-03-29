@@ -13,14 +13,14 @@ class Game {
         };
         this.highestblock = 0;
         this.score = 0;
-        this.state = {ongoing: true, won: false, lost: false};
+        this.state = {ongoing: true, won: false};
         if (options.debug) this.debug = true;
     }
 
     start() {
         if (this.debug) console.log(`${colors.purple}Debug:${reset} start: Generating start blocks.`);
         this.summonBlock(); this.summonBlock();
-        if (this.debug) {
+        if (this.debug) { 
             console.log(`${colors.purple}Debug:${reset} start: Blocks generated. Board state:`);
             console.log(this.board.data)
         }
@@ -52,12 +52,12 @@ class Game {
                 openYcoords.push(spot.y)
             }
         }
-        y = openYcoords[Math.floor(Math.random()*(openYcoords.length-1))]
+        y = openYcoords[Math.floor(Math.random()*(openYcoords.length))]
 
         if (this.debug) console.log(`${colors.purple}Debug:${reset} summonBlock: Generating X coordinate based on free spots at ${colors.green}Y=${y}${reset}.`);
         //determine X pos of block
         let openXcoords = freeSpots.filter(k => k.y === y).map(k => k.x);
-        x = openXcoords[Math.floor(Math.random()*(openXcoords.length-1))]
+        x = openXcoords[Math.floor(Math.random()*(openXcoords.length))]
 
         if (this.debug) console.log(`${colors.purple}Debug:${reset} summonBlock: Generating block value.`);
         value = Math.random() < 0.9 ? 2 : 4;
@@ -69,6 +69,10 @@ class Game {
         if (this.highestblock < value) {
             if (this.debug) console.log(`${colors.purple}Debug:${reset} New highest block updating ${colors.green}highestblock to ${value}${reset}.`);
             this.highestblock = value;
+            if (this.highestblock >= 2048) {
+                if (this.debug) console.log(`${colors.purple}Debug:${reset} Game won, reached 2048.`);
+                this.state.won = true;
+            }
         }
     }
 
@@ -99,6 +103,10 @@ class Game {
                     if (this.highestblock < this.board.data[y][x]) {
                         if (this.debug) console.log(`${colors.purple}Debug:${reset} New highest block updating ${colors.green}highestblock to ${this.board.data[y][x]}${reset}.`);
                         this.highestblock = this.board.data[y][x];
+                        if (this.highestblock >= 2048) {
+                            if (this.debug) console.log(`${colors.purple}Debug:${reset} Game won, reached 2048.`);
+                            this.state.won = true;
+                        }
                     }
                     x++;
                     if (!change) change = true;
@@ -112,6 +120,7 @@ class Game {
             this.summonBlock();
         } else {
             this.state.ongoing = false
+            if (this.debug) console.log(`${colors.purple}Debug:${reset} Game ended, no avalaible move.`);
         }
     }
 
@@ -123,7 +132,7 @@ class Game {
 
             //merging right
             let change = false;
-            for (let x = this.board.data[y].length-1; x > 1; x--) {
+            for (let x = this.board.data[y].length-1; x > 0; x--) {
                 if (this.board.data[y][x] === this.board.data[y][x - 1] != 0) {
                     this.board.data[y][x] += this.board.data[y][x - 1];
                     this.board.data[y][x - 1] = 0;
@@ -131,6 +140,10 @@ class Game {
                     if (this.highestblock < this.board.data[y][x]) {
                         if (this.debug) console.log(`${colors.purple}Debug:${reset} New highest block updating ${colors.green}highestblock to ${this.board.data[y][x]}${reset}.`);
                         this.highestblock = this.board.data[y][x];
+                        if (this.highestblock >= 2048) {
+                            if (this.debug) console.log(`${colors.purple}Debug:${reset} Game won, reached 2048.`);
+                            this.state.won = true;
+                        }
                     }
                     x--;
                     if (!change) change = true;
@@ -144,6 +157,7 @@ class Game {
             this.summonBlock();
         } else {
             this.state.ongoing = false
+            if (this.debug) console.log(`${colors.purple}Debug:${reset} Game ended, no avalaible move.`);
         }
     }
 
@@ -163,19 +177,24 @@ class Game {
                     if (this.highestblock < this.board.data[y][x]) {
                         if (this.debug) console.log(`${colors.purple}Debug:${reset} New highest block updating ${colors.green}highestblock to ${this.board.data[y][x]}${reset}.`);
                         this.highestblock = this.board.data[y][x];
+                        if (this.highestblock >= 2048) {
+                            if (this.debug) console.log(`${colors.purple}Debug:${reset} Game won, reached 2048.`);
+                            this.state.won = true;
+                        }
                     };
                     y++;
                     if (!change) change = true;
                 }
             }
             if (change) this.board.moveUp(x)
-            if (this.debug) console.log(`${colors.purple}Debug:${reset} moveUp: Moved and merged elements up at ${colors.green} X=${x} (${/*data representation || */`Data missing`})${reset}.`);
+            if (this.debug) console.log(`${colors.purple}Debug:${reset} moveUp: Moved and merged elements up at ${colors.green} X=${x} (${this.board.data.map(k => k[x]) || `Data missing`})${reset}.`);
         }
         this.allowedMoves = this.checkMovement()
         if (Object.keys(this.allowedMoves).map(k => this.allowedMoves[k]).filter(k => k).length) { 
             this.summonBlock();
         } else {
             this.state.ongoing = false
+            if (this.debug) console.log(`${colors.purple}Debug:${reset} Game ended, no avalaible move.`);
         }
     }
 
@@ -186,7 +205,7 @@ class Game {
             this.board.moveDown(x)
             //merging up
             let change = false;
-            for (let y = this.board.data.length - 1; y > 1; y--) {
+            for (let y = this.board.data.length - 1; y > 0; y--) {
                 if (this.board.data[y][x] === this.board.data[y - 1][x] != 0) {
                     this.board.data[y][x] += this.board.data[y - 1][x];
                     this.board.data[y - 1][x] = 0;
@@ -194,19 +213,24 @@ class Game {
                     if (this.highestblock < this.board.data[y][x]) {
                         if (this.debug) console.log(`${colors.purple}Debug:${reset} New highest block updating ${colors.green}highestblock to ${this.board.data[y][x]}${reset}.`);
                         this.highestblock = this.board.data[y][x];
+                        if (this.highestblock >= 2048) {
+                            if (this.debug) console.log(`${colors.purple}Debug:${reset} Game won, reached 2048.`);
+                            this.state.won = true;
+                        }
                     };
                     y--;
                     if (!change) change = true;
                 }
             }
             if (change) this.board.moveDown(x);
-            if (this.debug) console.log(`${colors.purple}Debug:${reset} moveDown: Moved and merged elements down at ${colors.green}X=${x} (${/*data representation || */`Data missing`})${reset}.`)
+            if (this.debug) console.log(`${colors.purple}Debug:${reset} moveDown: Moved and merged elements down at ${colors.green}X=${x} (${this.board.data.map(k => k[x]) || `Data missing`})${reset}.`)
         }
         this.allowedMoves = this.checkMovement()
         if (Object.keys(this.allowedMoves).map(k => this.allowedMoves[k]).filter(k => k).length) { 
             this.summonBlock();
         } else {
             this.state.ongoing = false
+            if (this.debug) console.log(`${colors.purple}Debug:${reset} Game ended, no avalaible move.`);
         }
     }
 
@@ -220,63 +244,148 @@ class Game {
             };
         
         // checking the x axis for left/right move validation
-        if(this.debug) console.log(`${colors.purple}Debug:${reset} checkMovement: Checking the left/right availability on the x axis`)
+        if (this.debug) console.log(`${colors.purple}Debug:${reset} checkMovement: Checking the left/right availability on the x axis`)
         for (let y = 0; y < data.length; y++) {
-            //check if the sides are empty
-            if (data[y][0] && !allowedMoves.left) allowedMoves.left = true;
-            if (data[y][data[y].length-1] && !allowedMoves.right) allowedMoves.right = true;
-
-            //if not check blocks in the middle
-            if (!allowedMoves.left || !allowedMoves.right) {
-
-                for (let x = 1; x < data[y].length-1; x++) {
-                    //if empty block in the middle move allowed
-                    if (!data[y][x]) {
-                        if (!allowedMoves.left) allowedMoves.left = true
-                        if (!allowedMoves.right) allowedMoves.right = true
-                        break;
-                    }
-
-                    //check if blocks can be merged
-                    if (data[y][x] === data[y][x-1] || data[y][x] === data[y][x+1]) { // no need for !=0 checked 
-                        if (!allowedMoves.left) allowedMoves.left = true
-                        if (!allowedMoves.right) allowedMoves.right = true
-                        break;
-                    }
-                    
+            for (let x = 0; x < data[y].length; x++) {
+                //check if blocks can be merged
+                if (data[y][x] === data[y][x-1] && data[y][x] !=0 || data[y][x] === data[y][x+1] && data[y][x] !=0) { // no need for !=0 checked 
+                    if (!allowedMoves.left) allowedMoves.left = true
+                    if (!allowedMoves.right) allowedMoves.right = true
+                    break;
                 }
             }
+            
+            let datacells = data[y].filter(k => k != 0).length
+            if (datacells < data[y].length) {
+                // filled sides
+                if (data[y][0] && data[y][data.length-1] && 2 < datacells) {
+                    if (!allowedMoves.left) allowedMoves.left = true                   
+                    if (!allowedMoves.right) allowedMoves.right = true
+                    break;
+                }
+
+                // only a side filled
+                if (datacells > 1) {
+                    if (data[y][0] && !data[y][1]) {
+                        if (!allowedMoves.left) allowedMoves.left = true
+                        if (!allowedMoves.right) allowedMoves.right = true
+                        break;
+                    }
+
+                    if (data[y][0] && data[y][1]) {
+                        if (!allowedMoves.right) allowedMoves.right = true
+                    }
+
+                    if (data[y][data.length-1] && !data[y][data.length-2]) {
+                        if (!allowedMoves.left) allowedMoves.left = true
+                        if (!allowedMoves.right) allowedMoves.right = true
+                        break;
+                    }
+
+                    if (data[y][data.length-1] && data[y][data.length-2]) {
+                        if (!allowedMoves.left) allowedMoves.left = true
+                    }   
+                }
+
+                //neither side is filled
+                if (datacells > 0) {
+                    if (!data[y][0] && !data[y][data.length-1]) {
+                        if (!allowedMoves.left) allowedMoves.left = true
+                        if (!allowedMoves.right) allowedMoves.right = true
+                        break;
+                    }
+                }
+
+                //only 1 side is filled
+                if (datacells === 1) {
+                    if (data[y][0]) {
+                        if (!allowedMoves.right) allowedMoves.right = true
+                    }
+
+                    if (data[y][data.length-1]) {
+                        if (!allowedMoves.left) allowedMoves.left = true
+                    }
+                }
+            }
+
             // if both have been already validated break the loop
             if (allowedMoves.left && allowedMoves.right) break;
         }
-        if(this.debug) console.log(`${colors.purple}Debug:${reset} checkMovement: Done searching x axis moving left ${colors.green + allowedMoves.left ? `allowed` : `forbidden`+reset}, moving right ${colors.green + allowedMoves.right ? `allowed` : `forbidden`+reset}`)
+        if (this.debug) console.log(`${colors.purple}Debug:${reset} checkMovement: Done searching x axis moving left ${colors.green + (allowedMoves.left ? `allowed` : `forbidden`)+reset}, moving right ${colors.green + (allowedMoves.right ? `allowed` : `forbidden`)+reset}`)
 
         // checking the y axis for up/down move validation
-        if(this.debug) console.log(`${colors.purple}Debug:${reset} checkMovement: Checking the up/down availability on the y axis`)
-        for(let x = 0; x < data[0].length; x++) {
-            //check if the sides are empty
-            if (data[0][x] && !allowedMoves.up) allowedMoves.up = true;
-            if (data[data.length-1][x] && !allowedMoves.down) allowedMoves.down = true;
-
+        if (this.debug) console.log(`${colors.purple}Debug:${reset} checkMovement: Checking the up/down availability on the y axis`)
+        for (let x = 0; x < data[0].length; x++) {
             for (let y = 1; y < data.length - 1; y++) {
-                //check for open spots in the middle
-                if (!data[y][x]) {
-                    if (!allowedMoves.up) allowedMoves.up = true
-                    if (!allowedMoves.down) allowedMoves.down = true
-                    break;
-                }
-
                 //check if blocks can be merged
-                if (data[y][x] === data[y - 1][x] || data[y][x] === data[y + 1][x]) { 
+                if (data[y][x] === data[y - 1][x] && data[y][x] !=0 || data[y][x] === data[y + 1][x] && data[y][x] !=0 ) { 
                     if (!allowedMoves.up) allowedMoves.up = true
                     if (!allowedMoves.down) allowedMoves.down = true
                     break;
                 }
             }
+            
+            let datacol = data.map(k => k[x])
+            let datacells = datacol.filter(k => k != 0).length
+            if (!allowedMoves.up || !allowedMoves.down) {
+                if (datacells < datacol.length) {
+                    // if both sides are filled
+                    if (datacol[0] && datacol[datacol.length-1] && 2 < datacells) {
+                        if (!allowedMoves.up) allowedMoves.up = true
+                        if (!allowedMoves.down) allowedMoves.down = true
+                        break;
+                    }
+
+                    // if a side is filled and there are other blocks
+                    if (datacells > 1) {
+                        if (datacol[0] && !datacol[1]) {
+                            if (!allowedMoves.up) allowedMoves.up = true
+                            if (!allowedMoves.down) allowedMoves.down = true
+                            break;
+                        }
+
+                        if (datacol[0] && datacol[1]) {
+                            if (!allowedMoves.down) allowedMoves.down = true
+                        }
+
+                        if (datacol[data.length-1] && !datacol[data.length-2]) {
+                            if (!allowedMoves.up) allowedMoves.up = true
+                            if (!allowedMoves.down) allowedMoves.down = true
+                            break;
+                        }
+
+                        if (datacol[data.length-1] && !datacol[data.length-2]) {
+                            if (!allowedMoves.up) allowedMoves.up = true
+                        }
+                    }
+                    
+                    // if neither side is filled
+                    if (datacells > 0) {
+                        if (!datacol[0] && !datacol[datacol.length-1]) {
+                            if (!allowedMoves.down) allowedMoves.down = true
+                            if (!allowedMoves.up) allowedMoves.up = true
+                            break;
+                        }
+                    }
+
+                    //only a side is filled
+                    if (datacells === 1) {
+                        if (datacol[0]) {
+                            if (!allowedMoves.down) allowedMoves.down = true
+                        }
+
+                        if (datacol[datacol.length-1]) {
+                            if (!allowedMoves.up) allowedMoves.up = true
+                        }
+                    }
+                }
+            }
+
             // if both have been already validated break the loop
             if (allowedMoves.up && allowedMoves.down) break;
-        }
-        if(this.debug) console.log(`${colors.purple}Debug:${reset} checkMovement: Done searching x axis moving up ${colors.green + allowedMoves.up ? `allowed` : `forbidden`+reset}, moving down ${colors.green + allowedMoves.down ? `allowed` : `forbidden`+reset}`)
+        } 
+
+        if (this.debug) console.log(`${colors.purple}Debug:${reset} checkMovement: Done searching x axis moving up ${colors.green + (allowedMoves.up ? `allowed` : `forbidden`)+reset}, moving down ${colors.green + (allowedMoves.down ? `allowed` : `forbidden`)+reset}`)
         this.allowedMoves = allowedMoves;
         return allowedMoves;
     }
