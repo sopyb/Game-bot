@@ -14,9 +14,10 @@ class Game {
         this.highestblock = 0;
         this.score = 0;
         this.state = {ongoing: true, won: false};
-        if (options) {
-            if (typeof options.debug === Boolean) {this.debug = options.debug} else this.debug = false;
-            if (typeof options.start === Number) {start(options.summon)} else this.start(2);
+        this.debug = false;
+        if (typeof options === 'object' && options !== null) {
+            if (typeof options.debug === 'boolean') this.debug = options.debug;
+            if (typeof options.start === 'number') {start(options.summon)} else this.start(2);
         } else {
             this.start(2)
         }
@@ -117,7 +118,7 @@ class Game {
             if (this.debug) console.log(`${colors.purple}Debug:${reset} moveLeft: Moved and merged elements to the left at ${colors.green}Y=${y} (${this.board.data[y] || `Data missing`})${reset}.`);
         }
         this.allowedMoves = this.checkMovement()
-        if (Object.keys(this.allowedMoves).map(k => this.allowedMoves[k]).filter(k => k).length != 0) { 
+        if (Object.keys(this.allowedMoves).map(k => this.allowedMoves[k]).includes(true)) { 
             this.summonBlock();
         } else {
             this.state.ongoing = false
@@ -154,7 +155,7 @@ class Game {
             if (this.debug) console.log(`${colors.purple}Debug:${reset} moveRight: Moved and merged elements to the left at ${colors.green}Y=${y} (${this.board.data[y] || `Data missing`})${reset}.`);
         }
         this.allowedMoves = this.checkMovement()
-        if (Object.keys(this.allowedMoves).map(k => this.allowedMoves[k]).filter(k => k).length != 0) { 
+        if (Object.keys(this.allowedMoves).map(k => this.allowedMoves[k]).includes(true)) { 
             this.summonBlock();
         } else {
             this.state.ongoing = false
@@ -191,7 +192,7 @@ class Game {
             if (this.debug) console.log(`${colors.purple}Debug:${reset} moveUp: Moved and merged elements up at ${colors.green} X=${x} (${this.board.data.map(k => k[x]) || `Data missing`})${reset}.`);
         }
         this.allowedMoves = this.checkMovement()
-        if (Object.keys(this.allowedMoves).map(k => this.allowedMoves[k]).filter(k => k).length != 0) { 
+        if (Object.keys(this.allowedMoves).map(k => this.allowedMoves[k]).includes(true)) { 
             this.summonBlock();
         } else {
             this.state.ongoing = false
@@ -227,7 +228,7 @@ class Game {
             if (this.debug) console.log(`${colors.purple}Debug:${reset} moveDown: Moved and merged elements down at ${colors.green}X=${x} (${this.board.data.map(k => k[x]) || `Data missing`})${reset}.`)
         }
         this.allowedMoves = this.checkMovement()
-        if (Object.keys(this.allowedMoves).map(k => this.allowedMoves[k]).filter(k => k).length != 0) { 
+        if (Object.keys(this.allowedMoves).map(k => this.allowedMoves[k]).includes(true)) { 
             this.summonBlock();
         } else {
             this.state.ongoing = false
@@ -355,7 +356,7 @@ class Game {
                             break;
                         }
 
-                        if (datacol[data.length-1] && !datacol[data.length-2]) {
+                        if (datacol[data.length-1] && datacol[data.length-2]) {
                             if (!allowedMoves.up) allowedMoves.up = true
                         }
                     }
