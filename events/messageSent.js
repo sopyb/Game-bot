@@ -28,5 +28,5 @@ client.on('message',async (message) => {
 })
 
 module.exports = {
-    'nsame': 'messageSent'
+    'name': 'messageSent'
 }
