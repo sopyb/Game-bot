@@ -14,8 +14,12 @@ class Game {
         this.highestblock = 0;
         this.score = 0;
         this.state = {ongoing: true, won: false};
-        if (typeof options.debug === Boolean) {this.debug = options.debug} else this.debug = false;
-        if (typeof options.start === Number) {start(options.summon)} else start(2);
+        if (options) {
+            if (typeof options.debug === Boolean) {this.debug = options.debug} else this.debug = false;
+            if (typeof options.start === Number) {start(options.summon)} else this.start(2);
+        } else {
+            this.start(2)
+        }
     }
 
     start(blocks) {
@@ -72,10 +76,6 @@ class Game {
         if (this.highestblock < value) {
             if (this.debug) console.log(`${colors.purple}Debug:${reset} New highest block updating ${colors.green}highestblock to ${value}${reset}.`);
             this.highestblock = value;
-            if (this.highestblock >= 2048) {
-                if (this.debug) console.log(`${colors.purple}Debug:${reset} Game won, reached 2048.`);
-                this.state.won = true;
-            }
         }
     }
 
@@ -89,8 +89,6 @@ class Game {
     }
 
     moveLeft() {
-        console.log(this);
-        console.log(this.allowedMoves)
         if (!this.allowedMoves.left) return;
         if (this.debug) console.log(`${colors.purple}Debug:${reset} moveLeft: Started moving blocks left.`);
         for (let y = 0; y < this.board.data.length; y++) {
@@ -106,7 +104,7 @@ class Game {
                     if (this.highestblock < this.board.data[y][x]) {
                         if (this.debug) console.log(`${colors.purple}Debug:${reset} New highest block updating ${colors.green}highestblock to ${this.board.data[y][x]}${reset}.`);
                         this.highestblock = this.board.data[y][x];
-                        if (this.highestblock >= 2048) {
+                        if (this.highestblock === 2048) {
                             if (this.debug) console.log(`${colors.purple}Debug:${reset} Game won, reached 2048.`);
                             this.state.won = true;
                         }
@@ -119,7 +117,7 @@ class Game {
             if (this.debug) console.log(`${colors.purple}Debug:${reset} moveLeft: Moved and merged elements to the left at ${colors.green}Y=${y} (${this.board.data[y] || `Data missing`})${reset}.`);
         }
         this.allowedMoves = this.checkMovement()
-        if (Object.keys(this.allowedMoves).map(k => this.allowedMoves[k]).filter(k => k).length) { 
+        if (Object.keys(this.allowedMoves).map(k => this.allowedMoves[k]).filter(k => k).length != 0) { 
             this.summonBlock();
         } else {
             this.state.ongoing = false
@@ -143,7 +141,7 @@ class Game {
                     if (this.highestblock < this.board.data[y][x]) {
                         if (this.debug) console.log(`${colors.purple}Debug:${reset} New highest block updating ${colors.green}highestblock to ${this.board.data[y][x]}${reset}.`);
                         this.highestblock = this.board.data[y][x];
-                        if (this.highestblock >= 2048) {
+                        if (this.highestblock === 2048) {
                             if (this.debug) console.log(`${colors.purple}Debug:${reset} Game won, reached 2048.`);
                             this.state.won = true;
                         }
@@ -156,7 +154,7 @@ class Game {
             if (this.debug) console.log(`${colors.purple}Debug:${reset} moveRight: Moved and merged elements to the left at ${colors.green}Y=${y} (${this.board.data[y] || `Data missing`})${reset}.`);
         }
         this.allowedMoves = this.checkMovement()
-        if (Object.keys(this.allowedMoves).map(k => this.allowedMoves[k]).filter(k => k).length) { 
+        if (Object.keys(this.allowedMoves).map(k => this.allowedMoves[k]).filter(k => k).length != 0) { 
             this.summonBlock();
         } else {
             this.state.ongoing = false
@@ -180,7 +178,7 @@ class Game {
                     if (this.highestblock < this.board.data[y][x]) {
                         if (this.debug) console.log(`${colors.purple}Debug:${reset} New highest block updating ${colors.green}highestblock to ${this.board.data[y][x]}${reset}.`);
                         this.highestblock = this.board.data[y][x];
-                        if (this.highestblock >= 2048) {
+                        if (this.highestblock === 2048) {
                             if (this.debug) console.log(`${colors.purple}Debug:${reset} Game won, reached 2048.`);
                             this.state.won = true;
                         }
@@ -193,7 +191,7 @@ class Game {
             if (this.debug) console.log(`${colors.purple}Debug:${reset} moveUp: Moved and merged elements up at ${colors.green} X=${x} (${this.board.data.map(k => k[x]) || `Data missing`})${reset}.`);
         }
         this.allowedMoves = this.checkMovement()
-        if (Object.keys(this.allowedMoves).map(k => this.allowedMoves[k]).filter(k => k).length) { 
+        if (Object.keys(this.allowedMoves).map(k => this.allowedMoves[k]).filter(k => k).length != 0) { 
             this.summonBlock();
         } else {
             this.state.ongoing = false
@@ -216,7 +214,7 @@ class Game {
                     if (this.highestblock < this.board.data[y][x]) {
                         if (this.debug) console.log(`${colors.purple}Debug:${reset} New highest block updating ${colors.green}highestblock to ${this.board.data[y][x]}${reset}.`);
                         this.highestblock = this.board.data[y][x];
-                        if (this.highestblock >= 2048) {
+                        if (this.highestblock === 2048) {
                             if (this.debug) console.log(`${colors.purple}Debug:${reset} Game won, reached 2048.`);
                             this.state.won = true;
                         }
@@ -229,7 +227,7 @@ class Game {
             if (this.debug) console.log(`${colors.purple}Debug:${reset} moveDown: Moved and merged elements down at ${colors.green}X=${x} (${this.board.data.map(k => k[x]) || `Data missing`})${reset}.`)
         }
         this.allowedMoves = this.checkMovement()
-        if (Object.keys(this.allowedMoves).map(k => this.allowedMoves[k]).filter(k => k).length) { 
+        if (Object.keys(this.allowedMoves).map(k => this.allowedMoves[k]).filter(k => k).length != 0) { 
             this.summonBlock();
         } else {
             this.state.ongoing = false

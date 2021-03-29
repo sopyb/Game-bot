@@ -1,5 +1,6 @@
-const { Game } = require('../../handlers/games/2048api'),    //Yes... I gave up running into errors for 7h straight with my own api
-    { MessageEmbed } = require('discord.js');  // maybe... I will go back at it (why do I hate myself)
+const { Game } = require('../../handlers/games/2048api'), // just 17h working on the api :O
+    { MessageEmbed } = require('discord.js'),
+    colors = require('../../config/embedcolors.json');
 
 function render(board) {
     let render = ""
@@ -20,12 +21,9 @@ module.exports = {
     ussage: "2048",
     run: async function(message, args) {
         // defining functions and nicknaming functions
-        let gameobj = new Game({debug: true});
-        
-        //adding first 2 blocks
-        gameobj.start();
+        let gameobj = new Game();
 
-        let embedmsg = new MessageEmbed().setColor("#1e6477").addField("2048!", render(gameobj.getData().board));
+        let embedmsg = new MessageEmbed().setColor(colors.info).setTitle("2048").setDescription(`You can use 🛑 to end the game now.`).addField(`Score: 0`, render(gameobj.getData().board));
         let gamemsg = await message.channel.send(`${message.author}'s game`, {embed: embedmsg});
 
         let reactions = ["⬅️", "⬆️", "⬇️", "➡️", "🛑"]
@@ -39,8 +37,13 @@ module.exports = {
 
         let collector = gamemsg.createReactionCollector(filter, {idle: 60000, errors: ['time']})
 
+        let lockreaction = false;
         collector.on('collect', (reaction, user) => {
-            reaction.users.remove(user.id);
+            reaction.users.remove(user.id)
+
+            if (lockreaction) return;
+            lockreaction=true;
+
             switch (reaction.emoji.name) {
                 case "⬅️":
                     gameobj.moveLeft();
@@ -56,19 +59,26 @@ module.exports = {
                     break;
                 case "🛑":
                     collector.stop()
+                    gameobj.state.ongoing = false
                     break;
             }
-            //console.log(gameobj.getData())
-            embedmsg = new MessageEmbed().setColor("#1e6477").addField("2048!", render(gameobj.getData().board));
-            gamemsg.edit(`${message.author}'s game`, {embed: embedmsg});
+            let gamedata = gameobj.getData()
+            if(gamedata.state.ongoing) {
+                embedmsg = new MessageEmbed().setColor(gamedata.state.won ? colors.win : colors.info).setTitle("2048").setDescription(`${gamedata.state.won ? `You won the game, but you can keep on going.\n` : ``}You can use 🛑 to end the game now.`).addField(`Score: ${gamedata.score}`, render(gameobj.getData().board));
+                gamemsg.edit(`${message.author}'s game`, {embed: embedmsg});
+            } else {
+                embedmsg = new MessageEmbed().setColor(gamedata.state.won ? colors.win : colors.error).setTitle("2048").setDescription(`Game ended, ${gamedata.state.won ? `you won` : `you lost`}.\nReason: ${Object.keys(gameobj.allowedMoves).map(k => gameobj.allowedMoves[k]).filter(k => k === true).length != 0 ? `Force stopped` : `No moves left`}.`).addField(`Final score: ${gamedata.score}`, render(gameobj.getData().board));
+                gamemsg.edit(`${message.author}'s game`, {embed: embedmsg});
+                collector.stop()
+            }
+            lockreaction = false;
         })
 
         collector.on('end', () => {
             gamemsg.reactions.removeAll();
-        })
-
-        collector.on('error', () => {
-            gamemsg.reactions.removeAll();
+            if (gameobj.state.ongoing) {
+                embedmsg = new MessageEmbed().setColor(gamedata.state.won ? colors.win : colors.error).setTitle("2048").setDescription(`Game ended, ${gamedata.state.won ? `you won` : `you lost`}.\nReason: Game timed out.`).addField(`Final score: ${gamedata.score}`, render(gameobj.getData().board));
+            }
         })
     }
 }
