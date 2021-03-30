@@ -1,11 +1,11 @@
-// YOU CAN GET THE EMOTES AT 
+// YOU CAN GET THE EMOJI AT 
 // https://imgur.com/a/uN2q9at
 //
 // The command will just display :2048_(tile value): if you don't config the emotes
 // to get a emoji id use the emoji and put \ in front of it
 // Ex: \:2048: = <:2048_0:826083631771942952>
 const emoji = [
-    "<:2048_0:826083631771942952>", //empty
+    "<:2048_0:826083631771942952>", //empty / 0
     "<:2048_2:826083631587131395>", //2
     "<:2048_4:826083631906160640>", //4
     "<:2048_8:826083632120725585>", //8
@@ -46,13 +46,13 @@ module.exports = {
     name: "2048",
     category: "games",
     shortdescription: "Join the numbers and get to the 2048 tile!",
-    description: undefined,
+    description: "Join the numbers and get to the 2048 tile!\n\_\_\*\*Playing on a mobile device is advised for the best experience.\*\*\_\_\n\nUse the arrow reactions move the tiles. Tiles with the same number merge into one when they touch. Add them up to reach 2048 and beyond!",
     ussage: "2048",
     run: async function(message, args) {
         // defining functions and nicknaming functions
-        let gameobj = new Game({debug: true});
+        let gameobj = new Game();
 
-        let embedmsg = new MessageEmbed().setColor(colors.info).setTitle("2048")/*.setDescription(`You can use 🛑 to end the game now.`)*/.addField(`Score: 0`, render(gameobj.getData().board));
+        let embedmsg = new MessageEmbed().setColor(colors.info).setAuthor(`2048!`, message.author.displayAvatarURL()).setDescription(`You can use 🛑 to end the game now.`).addField(`Score: 0`, render(gameobj.getData().board));
         let gamemsg = await message.channel.send(`${message.author}'s game`, {embed: embedmsg});
 
         let reactions = ["⬅️", "⬆️", "⬇️", "➡️", "🛑"]
@@ -75,7 +75,6 @@ module.exports = {
 
             switch (reaction.emoji.name) {
                 case "⬅️":
-                    gameobj.board.data = [[2,4,2,4],[4,2,4,2],[2,4,2,4],[4,2,4,0]]
                     gameobj.moveLeft();
                     break;
                 case "⬆️":
@@ -94,10 +93,10 @@ module.exports = {
             }
 
             if(gameobj.board.ongoing) {
-                embedmsg = new MessageEmbed().setColor(gameobj.board.won ? colors.win : colors.info).setTitle("2048").setDescription(`${gameobj.board.won ? `You won the game, but you can keep on going.\n` : ``}You can use 🛑 to end the game now.`).addField(`Score: ${gameobj.score}`, render(gameobj.getData().board));
+                embedmsg = new MessageEmbed().setColor(gameobj.board.won ? colors.win : colors.info).setAuthor(`2048!`, message.author.displayAvatarURL()).setDescription(`${gameobj.board.won ? `You won the game, but you can keep on going.\n` : ``}You can use 🛑 to end the game now.`).addField(`Score: ${gameobj.score}`, render(gameobj.getData().board));
                 gamemsg.edit(`${message.author}'s game`, {embed: embedmsg});
             } else {
-                embedmsg = new MessageEmbed().setColor(gameobj.board.won ? colors.win : colors.error).setTitle("2048").setDescription(`Game ended, ${gameobj.board.won ? `you won` : `you lost`}.\nReason: ${!Object.keys(gameobj.allowedMoves).map(k => gameobj.allowedMoves[k]).includes(true) ? `No moves left` : `Force stopped`}.`).addField(`Final score: ${gameobj.score}`, render(gameobj.getData().board));
+                embedmsg = new MessageEmbed().setColor(gameobj.board.won ? colors.win : colors.error).setAuthor(`2048!`, message.author.displayAvatarURL()).setDescription(`Game ended, ${gameobj.board.won ? `you won` : `you lost`}.\nReason: ${!Object.keys(gameobj.allowedMoves).map(k => gameobj.allowedMoves[k]).includes(true) ? `No moves left` : `Force stopped`}.`).addField(`Final score: ${gameobj.score}`, render(gameobj.getData().board));
                 gamemsg.edit(`${message.author}'s game`, {embed: embedmsg});
                 collector.stop()
             }
@@ -107,7 +106,7 @@ module.exports = {
         collector.on('end', () => {
             gamemsg.reactions.removeAll();
             if (gameobj.board.ongoing) {
-                embedmsg = new MessageEmbed().setColor(gameobj.board.won ? colors.win : colors.error).setTitle("2048").setDescription(`Game ended, ${gameobj.board.won ? `you won` : `you lost`}.\nReason: Game timed out.`).addField(`Final score: ${gameobj.score}`, render(gameobj.getData().board));
+                embedmsg = new MessageEmbed().setColor(gameobj.board.won ? colors.win : colors.error).setAuthor(`2048!`, message.author.displayAvatarURL()).setDescription(`Game ended, ${gameobj.board.won ? `you won` : `you lost`}.\nReason: Game timed out.`).addField(`Final score: ${gameobj.score}`, render(gameobj.getData().board));
                 gamemsg.edit(`${message.author}'s game`, {embed: embedmsg});
             }
         })
