@@ -9,3 +9,5 @@ Well, it's the old 2048 game, you merge blocks to get to 2048. *Best experience 
 
 **If you are going to download the bot you will need to add the emoji to your server**
 **The custom emoji can be found [here](https://imgur.com/a/uN2q9at)**
+
+## And more to come...
