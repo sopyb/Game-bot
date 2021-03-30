@@ -83,9 +83,10 @@ class Game {
     getData() {
         return {
             board: this.board.data,
+            ongoing: this.board.ongoing,
+            won: this.board.won,
             score: this.score,
-            highestblock: this.highestblock,
-            state: this.state
+            highestblock: this.highestblock
         }
     }
 
@@ -107,7 +108,7 @@ class Game {
                         this.highestblock = this.board.data[y][x];
                         if (this.highestblock === 2048) {
                             if (this.debug) console.log(`${colors.purple}Debug:${reset} Game won, reached 2048.`);
-                            this.state.won = true;
+                            this.board.won = true;
                         }
                     }
                     x++;
@@ -117,11 +118,10 @@ class Game {
             if (change) this.board.moveLeft(y)
             if (this.debug) console.log(`${colors.purple}Debug:${reset} moveLeft: Moved and merged elements to the left at ${colors.green}Y=${y} (${this.board.data[y] || `Data missing`})${reset}.`);
         }
+        this.summonBlock();
         this.allowedMoves = this.checkMovement()
-        if (Object.keys(this.allowedMoves).map(k => this.allowedMoves[k]).includes(true)) { 
-            this.summonBlock();
-        } else {
-            this.state.ongoing = false
+        if (!Object.keys(this.allowedMoves).map(k => this.allowedMoves[k]).includes(true)) {
+            this.board.ongoing = false
             if (this.debug) console.log(`${colors.purple}Debug:${reset} Game ended, no avalaible move.`);
         }
     }
@@ -144,7 +144,7 @@ class Game {
                         this.highestblock = this.board.data[y][x];
                         if (this.highestblock === 2048) {
                             if (this.debug) console.log(`${colors.purple}Debug:${reset} Game won, reached 2048.`);
-                            this.state.won = true;
+                            this.board.won = true;
                         }
                     }
                     x--;
@@ -154,11 +154,10 @@ class Game {
             if (change) this.board.moveRight(y)
             if (this.debug) console.log(`${colors.purple}Debug:${reset} moveRight: Moved and merged elements to the left at ${colors.green}Y=${y} (${this.board.data[y] || `Data missing`})${reset}.`);
         }
+        this.summonBlock();
         this.allowedMoves = this.checkMovement()
-        if (Object.keys(this.allowedMoves).map(k => this.allowedMoves[k]).includes(true)) { 
-            this.summonBlock();
-        } else {
-            this.state.ongoing = false
+        if (!Object.keys(this.allowedMoves).map(k => this.allowedMoves[k]).includes(true)) {
+            this.board.ongoing = false
             if (this.debug) console.log(`${colors.purple}Debug:${reset} Game ended, no avalaible move.`);
         }
     }
@@ -181,7 +180,7 @@ class Game {
                         this.highestblock = this.board.data[y][x];
                         if (this.highestblock === 2048) {
                             if (this.debug) console.log(`${colors.purple}Debug:${reset} Game won, reached 2048.`);
-                            this.state.won = true;
+                            this.board.won = true;
                         }
                     };
                     y++;
@@ -191,11 +190,10 @@ class Game {
             if (change) this.board.moveUp(x)
             if (this.debug) console.log(`${colors.purple}Debug:${reset} moveUp: Moved and merged elements up at ${colors.green} X=${x} (${this.board.data.map(k => k[x]) || `Data missing`})${reset}.`);
         }
+        this.summonBlock();
         this.allowedMoves = this.checkMovement()
-        if (Object.keys(this.allowedMoves).map(k => this.allowedMoves[k]).includes(true)) { 
-            this.summonBlock();
-        } else {
-            this.state.ongoing = false
+        if (!Object.keys(this.allowedMoves).map(k => this.allowedMoves[k]).includes(true)) {
+            this.board.ongoing = false
             if (this.debug) console.log(`${colors.purple}Debug:${reset} Game ended, no avalaible move.`);
         }
     }
@@ -217,7 +215,7 @@ class Game {
                         this.highestblock = this.board.data[y][x];
                         if (this.highestblock === 2048) {
                             if (this.debug) console.log(`${colors.purple}Debug:${reset} Game won, reached 2048.`);
-                            this.state.won = true;
+                            this.board.won = true;
                         }
                     };
                     y--;
@@ -227,11 +225,10 @@ class Game {
             if (change) this.board.moveDown(x);
             if (this.debug) console.log(`${colors.purple}Debug:${reset} moveDown: Moved and merged elements down at ${colors.green}X=${x} (${this.board.data.map(k => k[x]) || `Data missing`})${reset}.`)
         }
+        this.summonBlock();
         this.allowedMoves = this.checkMovement()
-        if (Object.keys(this.allowedMoves).map(k => this.allowedMoves[k]).includes(true)) { 
-            this.summonBlock();
-        } else {
-            this.state.ongoing = false
+        if (!Object.keys(this.allowedMoves).map(k => this.allowedMoves[k]).includes(true)) {
+            this.board.ongoing = false
             if (this.debug) console.log(`${colors.purple}Debug:${reset} Game ended, no avalaible move.`);
         }
     }
