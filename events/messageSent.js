@@ -1,7 +1,9 @@
-const { colors, format, reset } = require('../utils/clformat');
+const { colors, format, reset } = require('../utils/clformat'),
+    { MessageEmbed } = require('discord.js');
 
 client.on('message',async (message) => {
-    let prefix = client.config.prefix;
+    let prefix = client.serversettings.get(`${message.guild.id}.prefix`);
+    if (!prefix) prefix = client.config.prefix;
 
     if (message.mentions.has(client.user.id)) {
         return message.channel.send(`Hey there! My prefix is \`${prefix}\`.`);
@@ -17,6 +19,15 @@ client.on('message',async (message) => {
     let cmdfile = client.commands.get(command);
     if (!cmdfile) cmdfile = client.aliases.get(command);
     if (!cmdfile) return;
+
+    if (!message.member.hasPermission("ADMINISTATOR")) {
+        for (perm of cmdfile.reqperms) {
+            if (!message.member.hasPermission(perm)) {
+                return message.reply(`You're missing ${perm} permission to execute the command.`);
+            }
+        }
+    }
+    
 
     try {
         await cmdfile.run(message, args)

@@ -12,6 +12,7 @@
     "canvas": "^2.7.0",
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
-    "hex-to-hsl": "^1.0.2"
+    "hex-to-hsl": "^1.0.2",
+    "quick.db": "^7.1.3"
   }
 }

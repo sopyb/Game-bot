@@ -9,17 +9,18 @@ function onlyUnique(value, index, self) {
 module.exports = {
     name: 'help',
     category: 'info',
-    shortdescription: `Provides info about commands`,
+    shortdescription: `Provides info about commands.`,
     description: `Check all commands avalaible and info about each of them.`,
     ussage: "help [command]",
     run: function(message, args) {
         let categories = client.commands.map(k => k.category).filter(onlyUnique),
-            commands = (category) => {return client.commands.filter(k => k.category === category).map(k => `\`${k.name}\` - ${k.shortdescription || `No short description. :(`}`).sort().join(`\n`)}
-            prefix = client.config.prefix;
+            commands = (category) => {return client.commands.filter(k => k.category === category).map(k => `\`${k.name}\` - ${k.shortdescription || `No short description. :(`}`).sort().join(`\n`)},
+            prefix = client.serversettings.get(`${message.guild.id}.prefix`);
+            if (!prefix) prefix = client.config.prefix;
 
         //if first argument is a valid category
         if (!args[0]) args.push('')
-        if(client.commands.has(args[0].toLowerCase())) {
+        if (client.commands.has(args[0].toLowerCase())) {
             let command = client.commands.get(args[0].toLowerCase());
             let embed = new MessageEmbed()
                 .setAuthor(command.name.charAt(0).toUpperCase() + command.name.slice(1), message.author.displayAvatarURL())
