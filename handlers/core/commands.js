@@ -1,6 +1,6 @@
 const { readdirSync } = require('fs'),
     Path = require('path'),
-    { colors, format, reset } = require('../utils/clformat');
+    { colors, format, reset } = require('../../utils/clformat');
 
 function load() {
     let start = Date.now()
