@@ -1,5 +1,7 @@
 const { colors, format, reset } = require('../utils/clformat'),
-    { MessageEmbed } = require('discord.js');
+    { MessageEmbed, Collection } = require('discord.js');
+
+client.cooldown = new Collection();
 
 client.on('message',async (message) => {
     let prefix = client.serversettings.get(`${message.guild.id}.prefix`);
@@ -25,6 +27,21 @@ client.on('message',async (message) => {
             if (!message.member.hasPermission(perm)) {
                 return message.reply(`You're missing ${perm} permission to execute the command.`);
             }
+        }
+    }
+    
+    let cmdcooldown = cmdfile?.cooldown ?? 5;
+
+    if (cmdcooldown !== 0) {
+        if (!client.cooldown.has(cmdfile.name)) client.cooldown.set(cmdfile.name, new Collection());
+
+        let cooldowns = client.cooldown.get(cmdfile.name)
+        let time = Date.now();
+        if(cooldowns.has(message.author.id)) {
+            let wearoff = cooldowns.get(message.author.id);
+            if (time <= wearoff) return message.channel.send(`You're being rate limited. You can use that command again in ${Math.ceil((wearoff-time)/10)/100}s`)
+        } else {
+            cooldowns.set(message.author.id, time + (cmdcooldown * 1000));
         }
     }
     

@@ -1,12 +1,15 @@
-const { readdirSync } = require('fs');
-const Path = require('path');
-const { colors, format, reset } = require('../utils/clformat');
+const { readdirSync } = require('fs'),
+    Path = require('path'),
+    { colors, format, reset } = require('../../utils/clformat'),
+    { Collection } = require('discord.js');
+
+client.events = new Collection();
 
 function load() {
     let start = Date.now()
 
-    readdirSync(Path.join(__dirname, `../events`)).filter(file => file.endsWith('.js')).forEach(file => {
-        let event, path = Path.join(__dirname, `../events`, file);
+    readdirSync(Path.join(__dirname, `../../events`)).filter(file => file.endsWith('.js')).forEach(file => {
+        let event, path = Path.join(__dirname, `../../events`, file);
         try {
             event = require(path)
         } catch (e) {

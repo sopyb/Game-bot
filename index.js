@@ -10,10 +10,6 @@ global.client = new Client({
     "disableMentions": "everyone"
 })
 client.config = config;
-client.commands = new Collection();
-client.aliases = new Collection();
-client.events = new Collection();
-client.userdata = new db.table('users');
 client.serversettings = new db.table('servers')
 
 //load all handlers
