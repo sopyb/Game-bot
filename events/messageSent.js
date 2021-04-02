@@ -22,7 +22,7 @@ client.on('message',async (message) => {
     if (!cmdfile) cmdfile = client.aliases.get(command);
     if (!cmdfile) return;
 
-    if (!message.member.hasPermission("ADMINISTATOR")) {
+    if (!message.member.hasPermission("ADMINISTRATOR") && cmdfile.reqperms) {
         for (perm of cmdfile.reqperms) {
             if (!message.member.hasPermission(perm)) {
                 return message.reply(`You're missing ${perm} permission to execute the command.`);

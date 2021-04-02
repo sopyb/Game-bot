@@ -32,6 +32,7 @@ module.exports = {
         } else {
             let embed = new MessageEmbed().setAuthor(`Help menu`, message.author.displayAvatarURL()).setColor(colors.info).setDescription(`Use ${prefix}help [command] to see more info on all the commands`).setFooter(`Requested:`, client.user.displayAvatarURL()).setTimestamp(Date.now());
             for (let category of categories) {
+                if (!category) continue;
                 embed.addField(category.charAt(0).toUpperCase() + category.slice(1), commands(category))
             }
             message.channel.send(embed);
