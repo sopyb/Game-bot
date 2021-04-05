@@ -12,11 +12,9 @@ module.exports = {
     shortdescription: `Provides info about commands.`,
     description: `Check all commands avalaible and info about each of them.`,
     ussage: "help [command]",
-    run: function(message, args) {
+    run: function(message, args, prefix) {
         let categories = client.commands.map(k => k.category).filter(onlyUnique),
-            commands = (category) => {return client.commands.filter(k => k.category === category).map(k => `\`${k.name}\` - ${k.shortdescription || `No short description. :(`}`).sort().join(`\n`)},
-            prefix = client.serversettings.get(`${message.guild.id}.prefix`);
-            if (!prefix) prefix = client.config.prefix;
+            commands = (category) => {return client.commands.filter(k => k.category === category).map(k => `\`${k.name}\` - ${k.shortdescription || `No short description. :(`}`).sort().join(`\n`)};
 
         //if first argument is a valid category
         if (!args[0]) args.push('')

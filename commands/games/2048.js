@@ -27,7 +27,9 @@ const emoji = [
 
 const { Game } = require('../../handlers/games/2048api'), // just 22h working on the api :O
     { MessageEmbed } = require('discord.js'),
-    colors = require('../../config/embedcolors.json');
+    colors = require('../../config/embedcolors.json'),
+    { convertXp } = require('../../utils/xpUtils'),
+    db = require('../../utils/databaseDriver');
 
 function render(board) {
     let render = ``
@@ -64,6 +66,7 @@ module.exports = {
             return reactions.includes(react.emoji.name) && user === message.author
         }
 
+        let start = Date.now();
         let collector = gamemsg.createReactionCollector(filter, {idle: 60000, errors: ['time']})
 
         let lockreaction = false;
@@ -103,12 +106,25 @@ module.exports = {
             lockreaction = false;
         })
 
-        collector.on('end', () => {
+        collector.on('end', async () => {
             gamemsg.reactions.removeAll();
             if (gameobj.board.ongoing) {
                 embedmsg = new MessageEmbed().setColor(gameobj.board.won ? colors.win : colors.error).setAuthor(`2048!`, message.author.displayAvatarURL()).setDescription(`Game ended, ${gameobj.board.won ? `you won` : `you lost`}.\nReason: Game timed out.`).addField(`Final score: ${gameobj.score}`, render(gameobj.getData().board));
                 gamemsg.edit(`${message.author}'s game`, {embed: embedmsg});
             }
+            let duration = Math.floor((Date.now() - start)/1000/60),
+                score = gameobj.score,
+                highestblock = Math.log(gameobj.highestblock)/Math.log(2),
+                xpGot = Math.floor(duration*3 + score * highestblock / 400),
+                cacheXp = await db.get(`users`, message.author.id, `xp`) || 0,
+                cacheLevel = convertXp(cacheXp).level,
+                newLevel = convertXp(cacheXp + xpGot).level
+
+            if (newLevel > cacheLevel) {
+                message.channel.send(new MessageEmbed().setAuthor(`Congratulations! You leveled up to level ${newLevel}`, message.author.displayAvatarURL()))
+            }
+
+            db.add(`users`, message.author.id, `xp`, xpGot)
         })
     }
 }

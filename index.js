@@ -1,16 +1,15 @@
 //require needed modules
 const { Client, Collection } = require('discord.js'),
     config = require('./config/config.json'),
-    { colors, format, reset } = require('./utils/clformat'),
-    db = require('quick.db');
-    require('dotenv').config()
+    { colors, format, reset } = require('./utils/clformat');
+    require('dotenv').config();
+    require('./utils/databaseDriver').initDb();
 
 //set up the client variable and sub vables
 global.client = new Client({
     "disableMentions": "everyone"
 })
 client.config = config;
-client.serversettings = new db.table('servers')
 
 //load all handlers
 for (let handler of ["commands", "events"]) {
