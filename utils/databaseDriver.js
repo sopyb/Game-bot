@@ -4,7 +4,7 @@ const sqlite = require('sqlite3'),
 
 async function initDb() {
     open({
-        filename: Path.join(__dirname, '../database.db'),
+        filename: Path.join(process.cwd(), './database.db'),
         driver: sqlite.Database
     }).then((database) => {
         db = database;
@@ -27,7 +27,7 @@ async function initDb() {
 
 async function get(table, ID, query) {
     let db = await open({
-        filename: '../database.db',
+        filename: Path.join(process.cwd(), './database.db'),
         driver: sqlite.Database
     });
 
@@ -40,7 +40,7 @@ async function get(table, ID, query) {
 
 async function set(table, ID, query, value) {
     let db = await open({
-        filename: '../database.db',
+        filename: Path.join(process.cwd(), './database.db'),
         driver: sqlite.Database
     }),
     result = await db.get(`SELECT ${query} FROM ${table} WHERE ID = ${ID}`);
@@ -61,7 +61,7 @@ async function set(table, ID, query, value) {
 
 async function add(table, ID, query, value) {
     let db = await open({
-        filename: '../database.db',
+        filename: Path.join(process.cwd(), './database.db'),
         driver: sqlite.Database
     });
 
