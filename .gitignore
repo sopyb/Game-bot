@@ -4,4 +4,4 @@ node_modules
 Unused
 test.js
 out.png
-json.sqlite
+database.db
