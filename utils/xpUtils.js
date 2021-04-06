@@ -3,7 +3,7 @@ function convertXp(xp) {
 
     if (!xp) xp = 0
 
-    for (xpRequired; xpRequired < xp; xpRequired = (level-1)**3+5*(level**2)+25*level+101) {
+    for (xpRequired; xpRequired <= xp; xpRequired = (level-1)**3+5*(level**2)+25*level+101) {
         level++
         xp -= xpRequired
     }

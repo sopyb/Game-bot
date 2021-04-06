@@ -66,12 +66,11 @@ async function add(table, ID, query, value) {
     });
 
     let result = await db.get(`SELECT ${query} FROM ${table} WHERE ID = ${ID}`);
-    value = result?.[Object.keys?.(result)?.[0]] ?? 0 + value;
+    value = value + result?.[Object.keys?.(result)?.[0]] ?? 0;
 
     if(result) {
         await db.run(`UPDATE ${table} SET ${query} = ${value} WHERE ID = ${ID}`)
     } else {
-        console.log(`INSERT INTO ${table}(ID, ${query}) VALUES(${ID}, ${value});`)
         await db.run(`INSERT INTO ${table}(ID, ${query}) VALUES(${ID}, ${value});`)
     }
 

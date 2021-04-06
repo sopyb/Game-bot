@@ -99,8 +99,6 @@ module.exports = {
                 embedmsg = new MessageEmbed().setColor(gameobj.board.won ? colors.win : colors.info).setAuthor(`2048!`, message.author.displayAvatarURL()).setDescription(`${gameobj.board.won ? `You won the game, but you can keep on going.\n` : ``}You can use 🛑 to end the game now.`).addField(`Score: ${gameobj.score}`, render(gameobj.getData().board));
                 gamemsg.edit(`${message.author}'s game`, {embed: embedmsg});
             } else {
-                embedmsg = new MessageEmbed().setColor(gameobj.board.won ? colors.win : colors.error).setAuthor(`2048!`, message.author.displayAvatarURL()).setDescription(`Game ended, ${gameobj.board.won ? `you won` : `you lost`}.\nReason: ${!Object.keys(gameobj.allowedMoves).map(k => gameobj.allowedMoves[k]).includes(true) ? `No moves left` : `Force stopped`}.`).addField(`Final score: ${gameobj.score}`, render(gameobj.getData().board));
-                gamemsg.edit(`${message.author}'s game`, {embed: embedmsg});
                 collector.stop()
             }
             lockreaction = false;
@@ -108,23 +106,23 @@ module.exports = {
 
         collector.on('end', async () => {
             gamemsg.reactions.removeAll();
-            if (gameobj.board.ongoing) {
-                embedmsg = new MessageEmbed().setColor(gameobj.board.won ? colors.win : colors.error).setAuthor(`2048!`, message.author.displayAvatarURL()).setDescription(`Game ended, ${gameobj.board.won ? `you won` : `you lost`}.\nReason: Game timed out.`).addField(`Final score: ${gameobj.score}`, render(gameobj.getData().board));
-                gamemsg.edit(`${message.author}'s game`, {embed: embedmsg});
-            }
             let duration = Math.floor((Date.now() - start)/1000/60),
                 score = gameobj.score,
                 highestblock = Math.log(gameobj.highestblock)/Math.log(2),
                 xpGot = Math.floor(duration*3 + score * highestblock / 400),
-                cacheXp = await db.get(`users`, message.author.id, `xp`) || 0,
-                cacheLevel = convertXp(cacheXp).level,
+                cacheXp = await db.get(`users`, message.author.id, `xp`) ?? 0,
+                oldLevel = convertXp(cacheXp).level,
                 newLevel = convertXp(cacheXp + xpGot).level
 
-            if (newLevel > cacheLevel) {
-                message.channel.send(new MessageEmbed().setAuthor(`Congratulations! You leveled up to level ${newLevel}`, message.author.displayAvatarURL()))
-            }
+            if(xpGot) db.add(`users`, message.author.id, `xp`, xpGot);
 
-            db.add(`users`, message.author.id, `xp`, xpGot)
+            if (gameobj.board.ongoing) {
+                embedmsg = new MessageEmbed().setColor(gameobj.board.won ? colors.win : colors.error).setAuthor(`2048!`, message.author.displayAvatarURL()).setDescription(`Game ended, ${gameobj.board.won ? `you won` : `you lost`}.\*\*+${xpGot}xp\*\*\nReason: Game timed out.\n${newLevel != oldLevel ? `\n**Level up!** You're now level ${newLevel}!` : ``}`).addField(`Final score: ${gameobj.score}`, render(gameobj.getData().board));
+                gamemsg.edit(`${message.author}'s game`, {embed: embedmsg});
+            } else {
+                embedmsg = new MessageEmbed().setColor(gameobj.board.won ? colors.win : colors.error).setAuthor(`2048!`, message.author.displayAvatarURL()).setDescription(`Game ended, ${gameobj.board.won ? `you won` : `you lost`}.\*\*+${xpGot}xp\*\*\nReason: ${!Object.keys(gameobj.allowedMoves).map(k => gameobj.allowedMoves[k]).includes(true) ? `No moves left` : `Force stopped`}\n${newLevel != oldLevel ? `\n**Level up!** You're now level ${newLevel}!` : ``}`).addField(`Final score: ${gameobj.score}`, render(gameobj.getData().board));
+                gamemsg.edit(`${message.author}'s game`, {embed: embedmsg});
+            }
         })
     }
 }
