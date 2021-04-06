@@ -1,8 +1,14 @@
-const { createCanvas, loadImage } = require('canvas'),
+const { createCanvas, loadImage, registerFont } = require('canvas'),
     { MessageAttachment } = require('discord.js'),
-    colors = require('../../config/embedcolors.json'),
-    { convertXp } = require('../../utils/xpUtils'),
-    db = require('../../utils/databaseDriver');
+    colors = require(`${process.cwd()}/config/embedcolors.json`),
+    { convertXp } = require(`${process.cwd()}/utils/xpUtils`),
+    db = require(`${process.cwd()}/utils/databaseDriver`);
+
+    //loading Arimo
+    registerFont(`${process.cwd()}/fonts/Arimo-Regular.ttf`, {family:"Arimo"});
+    registerFont(`${process.cwd()}/fonts/Arimo-Bold.ttf`, {family:"Arimo", weight:"bold"});
+    registerFont(`${process.cwd()}/fonts/Arimo-BoldItalic.ttf`, {family:"Arimo", weight:"bold", style: "italic"});
+    registerFont(`${process.cwd()}/fonts/Arimo-Italic.ttf`, {family:"Arimo", style: "italic"});
 
 function colorAverage(img) {
     let skipPx = 25,
@@ -92,11 +98,11 @@ module.exports = {
 
         if (bgcolors.isLight) {profilectx.fillStyle = "#DDD"} else profilectx.fillStyle = "#222"
 
-        profilectx.font = "30px Arial";
+        profilectx.font = "30px Arimo";
         profilectx.fillText(target.user.username, 210, 120);
 
         
-        profilectx.font = "20px Arial";
+        profilectx.font = "20px Arimo";
         profilectx.fillText(target.title || `No title dispayed :O`, 210, 145);
 
         //rendering the level dot
@@ -129,12 +135,12 @@ module.exports = {
         // remove the clip and outline xp bar
         profilectx.restore()
         // add xp/xp needed text
-        profilectx.font = "bold 12px Arial";
+        profilectx.font = "bold 12px Arimo";
         profilectx.textAlign = "right"
         if (bgcolors.isLight) {profilectx.fillStyle = "#DDD"} else profilectx.fillStyle = "#222"
-        profilectx.fillText(`${target.xp.xp} / ${target.xp.xpRequired} xp`, startpoint.x + profilecard.width*0.52 + 15, startpoint.y + profilecard.height * 0.11)
+        profilectx.fillText(`${target.xp.xp} / ${target.xp.xpRequired} xp`, startpoint.x + profilecard.width*0.52 + 15, startpoint.y + profilecard.height * 0.11-1)
         //add % 
-        profilectx.font = "bold 24px Arial";
+        profilectx.font = "bold 24px Arimo";
         profilectx.textAlign = "left";
         profilectx.textBaseline = 'middle';
         profilectx.fillText((Math.floor(fillratio * 1000)/10).toLocaleString('en-US', {minimumIntegerDigits: 2, maximumIntegerDigits: 2, minimumFractionDigits: 1, maximumFractionDigits: 1}) + "%", startpoint.x + profilecard.width*0.555, startpoint.y + profilecard.height * 0.05)
