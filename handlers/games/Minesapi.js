@@ -109,11 +109,11 @@ class Game {
         let squaresNotOpen = new Array();
         for (let y = 0; y < this.board.data.length; y++) {
             for (let x = 0; x < this.board.data[y].length; x++) {
-                if (!this.board.data[y][x].isMine && this.board.data[y][x].isOpen) emptySquares.push({x,y})
+                if (!this.board.data[y][x].isMine && this.board.data[y][x].isOpen) squaresNotOpen.push({x,y})
             }
         }
 
-        if (!squaresNotOpen[0]) {
+        if (squaresNotOpen.length == 0) {
             this.board.state.ongoing = false;
             this.board.state.won = true;
         }

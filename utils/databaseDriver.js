@@ -31,10 +31,9 @@ async function get(table, ID, query) {
         driver: sqlite.Database
     });
 
-    let result = await db.get(`SELECT ${query} FROM ${table} WHERE ID = ${ID}`);
+    let result = await db.get(`SELECT ${query} FROM ${table} WHERE ID = "${ID}"`);
 
     db.close();
-
     return result?.[Object.keys?.(result)?.[0]];
 }
 
@@ -43,17 +42,16 @@ async function set(table, ID, query, value) {
         filename: Path.join(process.cwd(), './database.db'),
         driver: sqlite.Database
     }),
-    result = await db.get(`SELECT ${query} FROM ${table} WHERE ID = ${ID}`);
+    result = await db.get(`SELECT ${query} FROM ${table} WHERE ID = "${ID}"`);
 
     if(typeof value === "string") {
         value = `"${value}"`
     }
 
-    if(result) {
-        await db.run(`UPDATE ${table} SET ${query} = ${value} WHERE ID = ${ID}`)
+    if(result != {}) {
+        await db.run(`UPDATE ${table} SET ${query} = ${value} WHERE ID = "${ID}"`)
     } else {
-        console.log(`INSERT INTO ${table}(ID, ${query}) VALUES(${ID}, ${value});`)
-        await db.run(`INSERT INTO ${table}(ID, ${query}) VALUES(${ID}, ${value});`)
+        await db.run(`INSERT INTO ${table}(ID, ${query}) VALUES("${ID}", ${value});`)
     }
     
     db.close();
@@ -66,9 +64,10 @@ async function add(table, ID, query, value) {
     });
 
     let result = await db.get(`SELECT ${query} FROM ${table} WHERE ID = ${ID}`);
-    value = value + result?.[Object.keys?.(result)?.[0]] ?? 0;
 
-    if(result) {
+    value += result?.[Object.keys?.(result)?.[0]] || 0;
+
+    if(result != {}) {
         await db.run(`UPDATE ${table} SET ${query} = ${value} WHERE ID = ${ID}`)
     } else {
         await db.run(`INSERT INTO ${table}(ID, ${query}) VALUES(${ID}, ${value});`)

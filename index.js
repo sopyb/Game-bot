@@ -1,14 +1,20 @@
 //require needed modules
-const { Client, Collection } = require('discord.js'),
+const { Client, Intents } = require('discord.js'),
     config = require('./config/config.json'),
     { colors, format, reset } = require('./utils/clformat');
     require('dotenv').config();
     require('./utils/databaseDriver').initDb();
 
-//set up the client variable and sub vables
-global.client = new Client({
-    "disableMentions": "everyone"
-})
+//set up the client variable and sub variables
+let intents = new Intents([
+    Intents.FLAGS.GUILDS,
+    Intents.FLAGS.GUILD_MEMBERS,
+    Intents.FLAGS.GUILD_MESSAGES,
+    Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+    Intents.FLAGS.GUILD_MESSAGE_TYPING,
+])
+
+global.client = new Client({intents})
 client.config = config;
 
 //load all handlers

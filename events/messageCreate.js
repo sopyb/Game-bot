@@ -1,10 +1,10 @@
 const { colors, format, reset } = require('../utils/clformat'),
-    { MessageEmbed, Collection } = require('discord.js'),
-    db = require('../utils/databaseDriver');
+    { MessageEmbed, Collection, Permissions } = require('discord.js'),
+    db = require('../utils/databaseDriver')
 
 client.cooldown = new Collection();
 
-client.on('message',async (message) => {
+client.on('messageCreate',async (message) => {
     let prefix = await db.get(`servers`, message.guild.id, `prefix`);
     if (!prefix) prefix = client.config.prefix;
 
@@ -23,10 +23,10 @@ client.on('message',async (message) => {
     if (!cmdfile) cmdfile = client.aliases.get(command);
     if (!cmdfile) return;
 
-    if (!message.member.hasPermission("ADMINISTRATOR") && cmdfile.reqperms) {
+    if (!message.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR) && cmdfile.reqperms) {
         for (perm of cmdfile.reqperms) {
-            if (!message.member.hasPermission(perm)) {
-                return message.reply(`You're missing ${perm} permission to execute the command.`);
+            if (!message.member.permissions.has(perm)) {
+                return message.reply(`You're missing permissions to execute the command.`);
             }
         }
     }
@@ -50,13 +50,11 @@ client.on('message',async (message) => {
         }
     }
     
-    message.channel.startTyping(message.channel.typingCount+1)
+    message.channel.sendTyping()
     try {
         await cmdfile.run(message, args, prefix)
-        message.channel.stopTyping();
     } catch(e) {
         message.channel.send(`A error occured trying to run ${command}: \n\`\`\`${e}\`\`\``)
-        message.channel.stopTyping();
         console.error(`${colors.red}Error:${reset} Error occured with ${colors.green}${cmdfile.name}${reset} at ${colors.green}${new Date().toUTCString().split(' ')[4]} UTC${reset}`)
         console.log(e)
     }

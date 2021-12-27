@@ -103,7 +103,7 @@ module.exports = {
 
         
         profilectx.font = "20px Arimo";
-        profilectx.fillText(target.title || `No title dispayed :O`, 210, 145);
+        profilectx.fillText(target.title || `No title displayed :O`, 210, 145);
 
         //rendering the level dot
         profilectx.beginPath()
@@ -149,6 +149,6 @@ module.exports = {
 
 
         const attachment = new MessageAttachment(profilecard.toBuffer(),'test.png');
-        message.channel.send(attachment)
+        message.channel.send({files: [attachment]})
     }
 }

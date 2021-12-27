@@ -27,7 +27,7 @@ module.exports = {
         if (pageamount > 1) {
             // saves embed msg
             var cpage = 0;
-            var reactmsg = await message.channel.send(embedArray[cpage]);
+            var reactmsg = await message.channel.send({embeds: [embedArray[cpage]]});
             
             //adds reactions to the embed
             reactmsg.react("⏪");
@@ -47,14 +47,14 @@ module.exports = {
                 //First page
                 if (reaction.emoji.name === "⏪") {
                     cpage = 0;
-                    reactmsg.edit(embedArray[cpage])
+                    reactmsg.edit({embeds: [embedArray[cpage]]})
                 };
 
                 //Last page
                 if (reaction.emoji.name === "◀️") {
                     if (cpage!=0) {
                         cpage += -1;
-                        reactmsg.edit(embedArray[cpage])
+                        reactmsg.edit({embeds: [embedArray[cpage]]})
                     }
                 };
 
@@ -67,14 +67,14 @@ module.exports = {
                 if (reaction.emoji.name === "▶️") {
                     if (cpage != embedArray.length - 1) {
                         cpage += 1;
-                        reactmsg.edit(embedArray[cpage])
+                        reactmsg.edit({embeds: [embedArray[cpage]]})
                     }
                 };
 
                 //Last page
                 if (reaction.emoji.name === "⏩") {
                     cpage = embedArray.length-1;
-                    reactmsg.edit(embedArray[cpage])
+                    reactmsg.edit({embeds: [embedArray[cpage]]})
                 };
 
                 //Go to page
@@ -91,7 +91,7 @@ module.exports = {
                             //check if value collected is valid
                             if (parseInt(collected.first().content) > 0 && parseInt(collected.first().content) <= embedArray.length) {
                                 cpage = parseInt(collected.first().content) - 1;
-                                reactmsg.edit(embedArray[cpage]);
+                                reactmsg.edit({embeds: [embedArray[cpage]]});
                             } else {
                                 message.channel.send(`\`${collected.first().content}\` is not a valid page!`)
                                         .then(msg => {
@@ -116,7 +116,7 @@ module.exports = {
                 reactmsg.reactions.removeAll()
             });
         } else {
-            message.channel.send(embedArray[0])
+            message.channel.send({embeds: [embedArray[0]]})
         };
     }
 }

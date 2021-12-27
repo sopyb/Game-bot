@@ -54,8 +54,8 @@ module.exports = {
         // defining functions and nicknaming functions
         let gameobj = new Game();
 
-        let embedmsg = new MessageEmbed().setColor(colors.info).setAuthor(`2048!`, message.author.displayAvatarURL()).setDescription(`You can use 🛑 to end the game now.`).addField(`Score: 0`, render(gameobj.getData().board));
-        let gamemsg = await message.channel.send(`${message.author}'s game`, {embed: embedmsg});
+        let embedmsg = new MessageEmbed().setColor(colors.info).setAuthor({name: `2048!`, iconURL: message.author.displayAvatarURL()}).setDescription(`You can use 🛑 to end the game now.`).addField(`Score: 0`, render(gameobj.getData().board));
+        let gamemsg = await message.channel.send({content: `${message.author}'s game`, embeds: [embedmsg]});
 
         let reactions = ["⬅️", "⬆️", "⬇️", "➡️", "🛑"]
         for (reaction of reactions) {
@@ -63,11 +63,11 @@ module.exports = {
         }
 
         let filter = (react, user) => {
-            return reactions.includes(react.emoji.name) && user === message.author
+            return reactions.includes(react.emoji.name) && user.id === message.author.id
         }
 
         let start = Date.now();
-        let collector = gamemsg.createReactionCollector(filter, {idle: 60000, errors: ['time']})
+        let collector = gamemsg.createReactionCollector({filter, idle: 60000, errors: ['time']})
 
         let lockreaction = false;
         collector.on('collect', (reaction, user) => {
@@ -96,8 +96,8 @@ module.exports = {
             }
 
             if(gameobj.board.ongoing) {
-                embedmsg = new MessageEmbed().setColor(gameobj.board.won ? colors.win : colors.info).setAuthor(`2048!`, message.author.displayAvatarURL()).setDescription(`${gameobj.board.won ? `You won the game, but you can keep on going.\n` : ``}You can use 🛑 to end the game now.`).addField(`Score: ${gameobj.score}`, render(gameobj.getData().board));
-                gamemsg.edit(`${message.author}'s game`, {embed: embedmsg});
+                embedmsg = new MessageEmbed().setColor(gameobj.board.won ? colors.win : colors.info).setAuthor({name: `2048!`, iconURL: message.author.displayAvatarURL()}).setDescription(`${gameobj.board.won ? `You won the game, but you can keep on going.\n` : ``}You can use 🛑 to end the game now.`).addField(`Score: ${gameobj.score}`, render(gameobj.getData().board));
+                gamemsg.edit({content: `${message.author}'s game`, embeds: [embedmsg]});
             } else {
                 collector.stop()
             }
@@ -117,11 +117,11 @@ module.exports = {
             if(xpGot) db.add(`users`, message.author.id, `xp`, xpGot);
 
             if (gameobj.board.ongoing) {
-                embedmsg = new MessageEmbed().setColor(gameobj.board.won ? colors.win : colors.error).setAuthor(`2048!`, message.author.displayAvatarURL()).setDescription(`Game ended, ${gameobj.board.won ? `you won` : `you lost`}.\*\*+${xpGot}xp\*\*\nReason: Game timed out.\n${newLevel != oldLevel ? `\n**Level up!** You're now level ${newLevel}!` : ``}`).addField(`Final score: ${gameobj.score}`, render(gameobj.getData().board));
-                gamemsg.edit(`${message.author}'s game`, {embed: embedmsg});
+                embedmsg = new MessageEmbed().setColor(gameobj.board.won ? colors.win : colors.error).setAuthor({name: `2048!`, iconURL: message.author.displayAvatarURL()}).setDescription(`Game ended, ${gameobj.board.won ? `you won` : `you lost`}.\*\*+${xpGot}xp\*\*\nReason: Game timed out.\n${newLevel != oldLevel ? `\n**Level up!** You're now level ${newLevel}!` : ``}`).addField(`Final score: ${gameobj.score}`, render(gameobj.getData().board));
+                gamemsg.edit({content: `${message.author}'s game`, embeds: [embedmsg]});
             } else {
-                embedmsg = new MessageEmbed().setColor(gameobj.board.won ? colors.win : colors.error).setAuthor(`2048!`, message.author.displayAvatarURL()).setDescription(`Game ended, ${gameobj.board.won ? `you won` : `you lost`}.\*\*+${xpGot}xp\*\*\nReason: ${!Object.keys(gameobj.allowedMoves).map(k => gameobj.allowedMoves[k]).includes(true) ? `No moves left` : `Force stopped`}\n${newLevel != oldLevel ? `\n**Level up!** You're now level ${newLevel}!` : ``}`).addField(`Final score: ${gameobj.score}`, render(gameobj.getData().board));
-                gamemsg.edit(`${message.author}'s game`, {embed: embedmsg});
+                embedmsg = new MessageEmbed().setColor(gameobj.board.won ? colors.win : colors.error).setAuthor({name: `2048!`, iconURL: message.author.displayAvatarURL()}).setDescription(`Game ended, ${gameobj.board.won ? `you won` : `you lost`}.\*\*+${xpGot}xp\*\*\nReason: ${!Object.keys(gameobj.allowedMoves).map(k => gameobj.allowedMoves[k]).includes(true) ? `No moves left` : `Force stopped`}\n${newLevel != oldLevel ? `\n**Level up!** You're now level ${newLevel}!` : ``}`).addField(`Final score: ${gameobj.score}`, render(gameobj.getData().board));
+                gamemsg.edit({content: `${message.author}'s game`, embeds: [embedmsg]});
             }
         })
     }

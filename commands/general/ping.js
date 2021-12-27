@@ -8,10 +8,10 @@ module.exports = {
     description: `Check bot's latency to discord's API.`,
     ussage: "ping",
     run: function(message, args) {
-        let embed = new MessageEmbed().setAuthor(`Ping`, message.author.displayAvatarURL()).setColor(colors.info).setDescription(`Pinging...`);
-        message.channel.send(embed).then(msg => {
-            embed = new MessageEmbed().setAuthor(`Ping`, message.author.displayAvatarURL()).setColor(colors.success).setDescription(`Pong! That took ${Math.round(client.ws.ping)}ms.`)
-            msg.edit(embed)
+        let embed = new MessageEmbed().setAuthor({name: `Ping`, iconURL: message.author.displayAvatarURL()}).setColor(colors.info).setDescription(`Pinging...`);
+        message.channel.send({embeds: [embed]}).then(msg => {
+            embed = new MessageEmbed().setAuthor({name: `Ping`, iconURL: message.author.displayAvatarURL()}).setColor(colors.success).setDescription(`Pong! That took ${Date.now() - message.createdTimestamp}ms.`)
+            msg.edit({embeds: [embed]})
         })
     }
 }
