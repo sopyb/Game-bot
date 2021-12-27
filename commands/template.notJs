@@ -1,0 +1,12 @@
+module.exports = {
+    name: "",
+    aliases: [],
+    category: "",
+    shortdescription: "",
+    description: "",
+    ussage: "",
+    reqperms: [],
+    run: () => {
+        //code here
+    }
+}

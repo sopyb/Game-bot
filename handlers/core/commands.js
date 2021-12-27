@@ -26,7 +26,7 @@ function load() {
                 return;
             }
 
-            if (typeof command.aliases === Array) {
+            if (command.aliases?.length > 0) {
                 for(alias of command.aliases) {
                     client.aliases.set(alias, command.name)
                 }

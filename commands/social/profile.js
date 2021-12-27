@@ -59,8 +59,6 @@ module.exports = {
 
         let pfp = await loadImage(target.user.displayAvatarURL({format: 'png', size: 128}))
 
-
-
         let profilecard = new createCanvas(600, 450, 'png')
         let profilectx = profilecard.getContext('2d')
 
