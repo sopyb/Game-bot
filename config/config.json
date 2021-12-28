@@ -1,5 +1,5 @@
 {
-    "prefix": "x",
+    "prefix": "g!",
     "ownerID": ["895321199675080704"],
     "activity": [
         {
@@ -11,7 +11,7 @@
             "type": "COMPETING"
         },
         {
-            "text": "v0.1 - Alpha testing.",
+            "text": "v0.2 - 100% more games.",
             "type": "PLAYING"
         }
     ]
