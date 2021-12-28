@@ -1,11 +1,12 @@
 class Matrix {
     constructor(row, col, obj) {
-        if (!obj) obj = 0
         this.data = new Array(row);
         for (let i = 0; i < row; i++) {
             this.data[i] = new Array(col)
             for (let j = 0; j < col; j++) {
-                this.data[i][j] = Object.assign({}, obj)
+                if (typeof obj == "object") {
+                    this.data[i][j] = Object.assign({}, obj)
+                } else this.data[i][j] = obj || 0
             }
         };
         this.ongoing = true;

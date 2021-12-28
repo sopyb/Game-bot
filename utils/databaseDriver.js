@@ -7,7 +7,8 @@ async function initDb() {
         filename: Path.join(process.cwd(), './database.db'),
         driver: sqlite.Database
     }).then((database) => {
-        db = database;
+        global.db = database;
+        let db = database
 
         db.run(`CREATE TABLE IF NOT EXISTS servers (
             ID PRIMARY KEY,
@@ -20,62 +21,38 @@ async function initDb() {
             balance INTEGER DEFAULT 0,
             description TEXT
         )`);
-
-        db.close()
     }).catch(e => console.log(e));
 }
 
 async function get(table, ID, query) {
-    let db = await open({
-        filename: Path.join(process.cwd(), './database.db'),
-        driver: sqlite.Database
-    });
+    let result = await db.get(`SELECT ${query} FROM ${table} WHERE ID = "${ID}";`);
 
-    let result = await db.get(`SELECT ${query} FROM ${table} WHERE ID = "${ID}"`);
-
-    db.close();
     return result?.[Object.keys?.(result)?.[0]];
 }
 
 async function set(table, ID, query, value) {
-    let db = await open({
-        filename: Path.join(process.cwd(), './database.db'),
-        driver: sqlite.Database
-    }),
-    result = await db.get(`SELECT ${query} FROM ${table} WHERE ID = "${ID}"`);
+    let result = await get(table, ID, query);
 
     if(typeof value === "string") {
         value = `"${value}"`
     }
 
-    if(result != {}) {
-        await db.run(`UPDATE ${table} SET ${query} = ${value} WHERE ID = "${ID}"`)
+    if(result != null) {
+        await db.run(`UPDATE ${table} SET ${query} = ${value} WHERE ID = "${ID}";`)
     } else {
         await db.run(`INSERT INTO ${table}(ID, ${query}) VALUES("${ID}", ${value});`)
     }
-    
-    db.close();
 }
 
 async function add(table, ID, query, value) {
-    let db = await open({
-        filename: Path.join(process.cwd(), './database.db'),
-        driver: sqlite.Database
-    });
+    let result = await get(table, ID, query)
 
-    let result = await db.get(`SELECT ${query} FROM ${table} WHERE ID = ${ID}`);
+    value += result ?? 0;
 
-    value += result?.[Object.keys?.(result)?.[0]] || 0;
-
-    if(result != {}) {
-        await db.run(`UPDATE ${table} SET ${query} = ${value} WHERE ID = ${ID}`)
-    } else {
-        await db.run(`INSERT INTO ${table}(ID, ${query}) VALUES(${ID}, ${value});`)
-    }
-
-    db.close();
+    await set(table, ID, query, value);
 }
 
+process.on("exit", () => global.db.close())
 
 
 module.exports = {

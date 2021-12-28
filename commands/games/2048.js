@@ -106,15 +106,15 @@ module.exports = {
 
         collector.on('end', async () => {
             gamemsg.reactions.removeAll();
-            let duration = Math.floor((Date.now() - start)/1000/60),
+            let timeElapsed = Math.round((Date.now() - start) /60 /1000),
                 score = gameobj.score,
-                highestblock = Math.log(gameobj.highestblock)/Math.log(2),
-                xpGot = Math.floor(duration*3 + score * highestblock / 400),
+                highestblock = gameobj.highestblock,
+                xpGot = Math.floor(timeElapsed * 10 + highestblock/16) * Math.pow(2, score.toString().length - 3),
                 cacheXp = await db.get(`users`, message.author.id, `xp`) ?? 0,
                 oldLevel = convertXp(cacheXp).level,
                 newLevel = convertXp(cacheXp + xpGot).level
 
-            if(xpGot) db.add(`users`, message.author.id, `xp`, xpGot);
+            if (xpGot) db.add(`users`, message.author.id, `xp`, xpGot);
 
             if (gameobj.board.ongoing) {
                 embedmsg = new MessageEmbed().setColor(gameobj.board.won ? colors.win : colors.error).setAuthor({name: `2048!`, iconURL: message.author.displayAvatarURL()}).setDescription(`Game ended, ${gameobj.board.won ? `you won` : `you lost`}.\*\*+${xpGot}xp\*\*\nReason: Game timed out.\n${newLevel != oldLevel ? `\n**Level up!** You're now level ${newLevel}!` : ``}`).addField(`Final score: ${gameobj.score}`, render(gameobj.getData().board));
