@@ -8,20 +8,21 @@ class Game {
         
         this.state = {
             ongoing: true,
-            won: false
+            win: false
         }
     }
 
     render() {
-        let render = ""
+        let render = "`"
 
         this.word.split("").forEach(e => {
             if (this.lettersGuessed.includes(e)) {
-                render += `${e.toUpperCase()} `
-            } else render += `- `
+                render += e.toUpperCase()
+            } else render += "-"
         })
 
-        render += this.state.ongoing ? `\n**Guesses:** \`${this.lettersGuessed.toUpperCase().join(", ")}\`` : this.state.won ? "**You guessed the word!**" : `\n**Solution:** \`${this.word}\``
+        render += "`\n"
+        render += this.state.ongoing ? `\n**Guesses:** \`${this.lettersGuessed.join(" ").toUpperCase() || "None yet"}\`` : this.state.win ? "" : `\n**Solution:** \`${this.word}\``
 
         return render
     }
@@ -32,11 +33,9 @@ class Game {
 
         guess = guess.toLowerCase()
         if (guess.length != 1) {
-            if(guess == word) {
-                guess.split("").forEach(e => lettersGuessed.push(e));
-
-                return this.state = {ongoing: false, won: true}
-            } else if (guess.length == this.word.length) this.strikeCount++
+            if(guess == this.word) {
+                guess.split("").forEach(e => this.lettersGuessed.push(e));
+            } else this.strikeCount++
         } else {
             if (!this.lettersGuessed.includes(guess)) {
                 this.lettersGuessed.push(guess)
@@ -50,11 +49,19 @@ class Game {
 
     _checkState() {
         if (this.word.split("").every(e => this.lettersGuessed.includes(e))) {
-        } else if (this.strikeCount > 6) {
             this.state = {
                 ongoing: false,
-                won: false
+                win: true
+            }
+        } else if (this.strikeCount >= 6) {
+            this.state = {
+                ongoing: false,
+                win: false
             }
         }
     }
+}
+
+module.exports = {
+    Game
 }
