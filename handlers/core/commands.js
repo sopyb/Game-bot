@@ -8,8 +8,8 @@ client.aliases = new Collection();
 
 function load() {
     let start = Date.now()
-    readdirSync(Path.join(__dirname, '../../commands')).forEach(dir => {
-        readdirSync(Path.join(__dirname, '../../commands', dir)).filter(file => file.endsWith('.js')).forEach(file => {
+    readdirSync(Path.join(__dirname, '../../commands'), {withFileTypes: true}).filter(e => e.isDirectory()).map(e => e.name)
+        .forEach(dir => {readdirSync(Path.join(__dirname, '../../commands', dir)).filter(file => file.endsWith('.js')).forEach(file => {
             let command, path = Path.join(__dirname, '../../commands', dir, file);
             try {
                 command = require(`../../commands/${dir}/${file}`)
@@ -28,7 +28,7 @@ function load() {
 
             if (command.aliases?.length > 0) {
                 for(alias of command.aliases) {
-                    client.aliases.set(alias, command.name)
+                    client.aliases.set(alias, command)
                 }
             }
         })
