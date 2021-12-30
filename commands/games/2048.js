@@ -27,13 +27,12 @@ module.exports = {
                     new MessageButton().setStyle("PRIMARY").setCustomId('down').setLabel("\u2193"),
                     new MessageButton().setStyle("SECONDARY").setCustomId('blank3').setLabel(" ").setDisabled(true))
             ],
-            genEmbed = () => {return new MessageEmbed().setColor(colors.info).setAuthor({name: `2048!`, iconURL: message.author.displayAvatarURL()}).addField(`Score: 0`, game.render())},
+            genEmbed = () => {return new MessageEmbed().setColor(colors.info).setAuthor({name: `2048!`, iconURL: message.author.displayAvatarURL()}).addField(`Score: ${game.board.score}`, game.render())},
             gameMsg = await message.channel.send({components, content: `${message.author}'s game`, embeds: [genEmbed()]}),
-            collector = gameMsg.createMessageComponentCollector({idle: 60000});
+            filter = (i) => i.isButton() && i.user.id == message.author.id,
+            collector = gameMsg.createMessageComponentCollector({filter, idle: 60000});
 
         collector.on('collect', i => {
-            if (i.user.id != message.author.id) i.reply("You can't mess with other people's game... Meanie >:(")
-
             switch (i.customId) {
                 case "left":
                     game.moveLeft();
@@ -51,16 +50,15 @@ module.exports = {
                     collector.stop()
                     break;
             }
-
             gameMsg.edit({content: `${message.author}'s game`, embeds: [genEmbed().setColor(game.board.won ? colors.win : colors.info).setDescription(game.board.won ? `You won the game, but you can keep on going.\n` : ``)]});
             i.deferUpdate()
 
-            if (!game.board.ongoing) collector.stop()
+            if (!game.state.ongoing) collector.stop()
         })
 
         collector.on('end', async () => {
             let timeElapsed = Math.round((Date.now() - start) /60 /1000),
-                xpGot = Math.floor(timeElapsed * 10 + game.topTile/16 * Math.pow(2, game.score.toString().length - 3)),
+                xpGot = Math.floor(timeElapsed * 10 + game.board.topTile/16 * Math.pow(2, game.board.score.toString().length - 3)),
                 cacheXp = await db.get(`users`, message.author.id, `xp`) ?? 0,
                 oldLevel = convertXp(cacheXp).level,
                 newLevel = convertXp(cacheXp + xpGot).level

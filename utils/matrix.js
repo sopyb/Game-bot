@@ -10,63 +10,6 @@ class Matrix {
             }
         };
     }
-
-    // ⬅ move 
-    moveLeft(y) {
-        let copyX;
-        for (let x = 0; x < this.data[y].length; x++) {
-            copyX = x;
-            for (copyX; !this.data[y][x] && copyX < this.data[y].length; copyX++) {
-                if (this.data[y][copyX]) {
-                    this.data[y][x] = this.data[y][copyX]
-                    this.data[y][copyX] = 0
-                }
-            }
-        }
-    }
-
-    // ➡ move
-    moveRight(y) {
-        let copyX;
-        for (let x = this.data[y].length-1; x >= 0; x--) {
-            copyX = x;
-            for (copyX; !this.data[y][x] && copyX >= 0; copyX--) {
-                if (this.data[y][copyX]) {
-                    this.data[y][x] = this.data[y][copyX]
-                    this.data[y][copyX] = 0
-                }
-            }
-        }
-    }
-
-    // ⬆ move
-    moveUp(x) {
-        let copyY;
-        for (let y = 0; y < this.data.length; y++) {
-            copyY = y
-            for (copyY; !this.data[y][x] && copyY < this.data.length; copyY++) {
-                if(this.data[copyY][x]) {
-                    this.data[y][x] = this.data[copyY][x]
-                    this.data[copyY][x] = 0
-
-                }
-            }
-        }
-    }
-
-    // ⬇ move
-    moveDown(x) {
-        let copyY;
-        for (let y = this.data.length-1; y >= 0; y--) {
-            copyY = y
-            for (copyY; !this.data[y][x] && copyY >= 0; copyY--) {
-                if(this.data[copyY][x]) {
-                    this.data[y][x] = this.data[copyY][x]
-                    this.data[copyY][x] = 0
-                }
-            }
-        }
-    }
 }
 
 module.exports = {
