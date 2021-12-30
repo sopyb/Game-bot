@@ -13,7 +13,7 @@ class Game {
         };
         this.topTile = 0;
         this.score = 0;
-        this.board.state = {ongoing: true, win: false};
+        this.state = {ongoing: true, win: false};
         this.debug = false;
         if (typeof options === 'object' && options !== null) {
             if (typeof options.debug === 'boolean') this.debug = options.debug;

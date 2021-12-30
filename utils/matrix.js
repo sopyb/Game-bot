@@ -9,8 +9,6 @@ class Matrix {
                 } else this.data[i][j] = obj || 0
             }
         };
-        this.ongoing = true;
-        this.won = false;
     }
 
     // ⬅ move 

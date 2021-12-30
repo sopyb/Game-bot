@@ -9,7 +9,7 @@ class Game {
             minesNearby: 0
         }
         this.board = new Matrix((options?.rows || 7), (options?.cols || options?.rows || 7), defaultState);
-        this.board.state = {
+        this.state = {
             firstMove: true,
             ongoing: true,
             won: false
@@ -20,17 +20,17 @@ class Game {
 
     flag(x, y) {
         if (this.board.data[y][x].isOpen) return;
-        if (!this.board.state.ongoing) return;
+        if (!this.state.ongoing) return;
         this.board.data[y][x].isFlagged = this.board.data[y][x].isFlagged ? false : true
         this._checkState()
     }
 
     open(x, y) {
-        if (!this.board.state.ongoing) return;
+        if (!this.state.ongoing) return;
         if (this.board.data[y][x].isOpen) return; // can't open already open squares
         if (this.board.data[y][x].isFlagged) return; // can't open flagged squares
         if (this.board.data[y][x].isMine) {
-            if (this.board.state.firstMove) {
+            if (this.state.firstMove) {
                 //move bomb if first move is a mine
                 let freeSquares = this._freeSquares();
 
@@ -39,18 +39,18 @@ class Game {
                 this.board.data[moveSpot.y][moveSpot.y].isMine = true;
                 this._calculateNearby()
             } else {
-                this.board.state.ongoing = false
+                this.state.ongoing = false
             }
         }
         
         this.board.data[y][x].isOpen = true
         if (this.board.data[y][x].minesNearby === 0) this._cascadeOpen(x, y)
         this._checkState()
-        this.board.state.firstMove = false
+        this.state.firstMove = false
     }
 
     render() {
-        let render = this.board.state.ongoing ? `🟩` : `🟥`,
+        let render = this.state.ongoing ? `🟩` : `🟥`,
             y = this.board.data.length,
             x = this.board.data?.[0]?.length
         
@@ -66,11 +66,11 @@ class Game {
                 let curTile = this.board.data[i][j]
 
                 render += curTile.isFlagged ? `🚩` : !curTile.isOpen ?
-                            !this.board.state.ongoing && curTile.isMine ? "💣" : "⬛" : //if tile not open
+                            !this.state.ongoing && curTile.isMine ? "💣" : "⬛" : //if tile not open
                             curTile.isMine ? "💥" : [`🟦`,`1️⃣`,`2️⃣`,`3️⃣`,`4️⃣`,`5️⃣`,`6️⃣`,`7️⃣`,`8️⃣`,`9️⃣`][curTile.minesNearby] //if tile open
 
 
-                // if (this.board.state.ongoing) {
+                // if (this.state.ongoing) {
 
                 //     render += curTile.isOpen ? (curTile.isMine ? "💥" : [`🟦`,`1️⃣`,`2️⃣`,`3️⃣`,`4️⃣`,`5️⃣`,`6️⃣`,`7️⃣`,`8️⃣`,`9️⃣`][curTile.minesNearby]) : "⬛"
                 // } else render += curTile.isMine ? "💣" : (curTile.isOpen ? [`🟦`,`1️⃣`,`2️⃣`,`3️⃣`,`4️⃣`,`5️⃣`,`6️⃣`,`7️⃣`,`8️⃣`,`9️⃣`][curTile.minesNearby] : "⬛")
@@ -133,8 +133,8 @@ class Game {
         }
 
         if (tilesNotOpen.length == 0 || falseFlagged.length == 0) {
-            this.board.state.ongoing = false;
-            this.board.state.won = true;
+            this.state.ongoing = false;
+            this.state.won = true;
         }
     }
 

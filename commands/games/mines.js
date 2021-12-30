@@ -36,7 +36,7 @@ module.exports = {
                 game.flag(x,y)
             } else game.open(x,y)
 
-            if (!game.board.state.ongoing) return collector.stop();
+            if (!game.state.ongoing) return collector.stop();
 
             gameMsg.edit({embeds: [genEmbed().setDescription(`To open a tile write the tile coordinate in chat.\nTo flag it, add F to the coordinate.\n\`Ex. C4F\`\n\nYou can use \`end\` to end the game now.`)]})
         })
@@ -48,7 +48,7 @@ module.exports = {
 
             for (let y = 0; y < game.board.data.length; y++) {
                 for (let x = 0; x < game.board.data[y].length; x++) {
-                    if (game.board.state.win) {
+                    if (game.state.win) {
                         tilesOpen++
                         if (game.board.data[y][x].isMine) bombsFlagged++
                     } else {
@@ -66,8 +66,8 @@ module.exports = {
             
             if (xpGot) db.add(`users`, message.author.id, `xp`, xpGot);
 
-            gameMsg.edit({embeds: [genEmbed().setColor(game.board.state.win ? colors.win : colors.error)
-                .setDescription(`Game ended, you ${game.board.state.win ? `won` : `lost`}. **+${xpGot}xp**\n${game.board.state.win ? `You found all the bombs!` : game.board.state.ongoing ? `Game stopped` : `You dug a bomb.`}${newLevel != oldLevel ? `\n\n**Level up!** You're now level ${newLevel}!` : ``}`)]})
+            gameMsg.edit({embeds: [genEmbed().setColor(game.state.win ? colors.win : colors.error)
+                .setDescription(`Game ended, you ${game.state.win ? `won` : `lost`}. **+${xpGot}xp**\n${game.state.win ? `You found all the bombs!` : game.state.ongoing ? `Game stopped` : `You dug a bomb.`}${newLevel != oldLevel ? `\n\n**Level up!** You're now level ${newLevel}!` : ``}`)]})
         })
     }
 }

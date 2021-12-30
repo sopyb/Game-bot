@@ -67,8 +67,8 @@ module.exports = {
 
             if (xpGot) db.add(`users`, message.author.id, `xp`, xpGot);
 
-            gameMsg.edit({components: [], embeds: [genEmbed().setColor(game.board.state.win ? colors.win : colors.error)
-                .setDescription(`Game ended, you ${game.board.state.win ? `won` : `lost`}. **+${xpGot}xp**\n${game.board.state.ongoing ? `Game stopped` : `No moves left.`}${newLevel != oldLevel ? `\n\n**Level up!** You're now level ${newLevel}!` : ``}`)]})
+            gameMsg.edit({components: [], embeds: [genEmbed().setColor(game.state.win ? colors.win : colors.error)
+                .setDescription(`Game ended, you ${game.state.win ? `won` : `lost`}. **+${xpGot}xp**\n${game.state.ongoing ? `Game stopped` : `No moves left.`}${newLevel != oldLevel ? `\n\n**Level up!** You're now level ${newLevel}!` : ``}`)]})
         })
     }
 }
