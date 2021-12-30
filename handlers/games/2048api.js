@@ -1,6 +1,6 @@
 const { Matrix } = require('../../utils/matrix'),
     { colors, format, reset } = require('../../utils/clformat'),
-    validmoves = ["up", "left", "right", "down"];
+    { emoji } = require("../../sources/2048")
 
 class Game {
     constructor(options) {
@@ -11,9 +11,9 @@ class Game {
             up: true,
             down: true
         };
-        this.highestblock = 0;
+        this.topTile = 0;
         this.score = 0;
-        this.state = {ongoing: true, won: false};
+        this.state = {ongoing: true, win: false};
         this.debug = false;
         if (typeof options === 'object' && options !== null) {
             if (typeof options.debug === 'boolean') this.debug = options.debug;
@@ -33,6 +33,18 @@ class Game {
             console.log(this.board.data)
         }
     }
+
+
+        render() {
+            let render = ``
+            for (let y = 0; y < this.board.data.length; y++) {
+                for (let x = 0; x < this.board.data[y].length; x++) {
+                    render += emoji[Math.log(this.board.data[y][x] || 1)/Math.log(2)]
+                }
+                render += `\n`
+            }
+            return render;
+}
 
     summonBlock() {
         let freeSpots = new Array(), x, y, value;
@@ -74,9 +86,9 @@ class Game {
         if (this.debug) console.log(`${colors.purple}Debug:${reset} summonBlock: Setting block on board at ${colors.green}X=${x} Y=${y}${reset} to ${colors.green}value ${value}${reset}.`);
         this.board.data[y][x] = value;
         this.allowedMoves = this.checkMovement();
-        if (this.highestblock < value) {
-            if (this.debug) console.log(`${colors.purple}Debug:${reset} New highest block updating ${colors.green}highestblock to ${value}${reset}.`);
-            this.highestblock = value;
+        if (this.topTile < value) {
+            if (this.debug) console.log(`${colors.purple}Debug:${reset} New highest block updating ${colors.green}topTile to ${value}${reset}.`);
+            this.topTile = value;
         }
     }
 
@@ -84,9 +96,9 @@ class Game {
         return {
             board: this.board.data,
             ongoing: this.board.ongoing,
-            won: this.board.won,
+            win: this.board.win,
             score: this.score,
-            highestblock: this.highestblock
+            topTile: this.topTile
         }
     }
 
@@ -103,12 +115,12 @@ class Game {
                     this.board.data[y][x] += this.board.data[y][x + 1];
                     this.board.data[y][x + 1] = 0;
                     this.score += this.board.data[y][x];
-                    if (this.highestblock < this.board.data[y][x]) {
-                        if (this.debug) console.log(`${colors.purple}Debug:${reset} New highest block updating ${colors.green}highestblock to ${this.board.data[y][x]}${reset}.`);
-                        this.highestblock = this.board.data[y][x];
-                        if (this.highestblock === 2048) {
-                            if (this.debug) console.log(`${colors.purple}Debug:${reset} Game won, reached 2048.`);
-                            this.board.won = true;
+                    if (this.topTile < this.board.data[y][x]) {
+                        if (this.debug) console.log(`${colors.purple}Debug:${reset} New highest block updating ${colors.green}topTile to ${this.board.data[y][x]}${reset}.`);
+                        this.topTile = this.board.data[y][x];
+                        if (this.topTile === 2048) {
+                            if (this.debug) console.log(`${colors.purple}Debug:${reset} Game win, reached 2048.`);
+                            this.board.win = true;
                         }
                     }
                     x++;
@@ -139,12 +151,12 @@ class Game {
                     this.board.data[y][x] += this.board.data[y][x - 1];
                     this.board.data[y][x - 1] = 0;
                     this.score += this.board.data[y][x];
-                    if (this.highestblock < this.board.data[y][x]) {
-                        if (this.debug) console.log(`${colors.purple}Debug:${reset} New highest block updating ${colors.green}highestblock to ${this.board.data[y][x]}${reset}.`);
-                        this.highestblock = this.board.data[y][x];
-                        if (this.highestblock === 2048) {
-                            if (this.debug) console.log(`${colors.purple}Debug:${reset} Game won, reached 2048.`);
-                            this.board.won = true;
+                    if (this.topTile < this.board.data[y][x]) {
+                        if (this.debug) console.log(`${colors.purple}Debug:${reset} New highest block updating ${colors.green}topTile to ${this.board.data[y][x]}${reset}.`);
+                        this.topTile = this.board.data[y][x];
+                        if (this.topTile === 2048) {
+                            if (this.debug) console.log(`${colors.purple}Debug:${reset} Game win, reached 2048.`);
+                            this.board.win = true;
                         }
                     }
                     x--;
@@ -175,12 +187,12 @@ class Game {
                     this.board.data[y][x] += this.board.data[y + 1][x];
                     this.board.data[y + 1][x] = 0;
                     this.score += this.board.data[y][x];
-                    if (this.highestblock < this.board.data[y][x]) {
-                        if (this.debug) console.log(`${colors.purple}Debug:${reset} New highest block updating ${colors.green}highestblock to ${this.board.data[y][x]}${reset}.`);
-                        this.highestblock = this.board.data[y][x];
-                        if (this.highestblock === 2048) {
-                            if (this.debug) console.log(`${colors.purple}Debug:${reset} Game won, reached 2048.`);
-                            this.board.won = true;
+                    if (this.topTile < this.board.data[y][x]) {
+                        if (this.debug) console.log(`${colors.purple}Debug:${reset} New highest block updating ${colors.green}topTile to ${this.board.data[y][x]}${reset}.`);
+                        this.topTile = this.board.data[y][x];
+                        if (this.topTile === 2048) {
+                            if (this.debug) console.log(`${colors.purple}Debug:${reset} Game win, reached 2048.`);
+                            this.board.win = true;
                         }
                     };
                     y++;
@@ -210,12 +222,12 @@ class Game {
                     this.board.data[y][x] += this.board.data[y - 1][x];
                     this.board.data[y - 1][x] = 0;
                     this.score += this.board.data[y][x];
-                    if (this.highestblock < this.board.data[y][x]) {
-                        if (this.debug) console.log(`${colors.purple}Debug:${reset} New highest block updating ${colors.green}highestblock to ${this.board.data[y][x]}${reset}.`);
-                        this.highestblock = this.board.data[y][x];
-                        if (this.highestblock === 2048) {
-                            if (this.debug) console.log(`${colors.purple}Debug:${reset} Game won, reached 2048.`);
-                            this.board.won = true;
+                    if (this.topTile < this.board.data[y][x]) {
+                        if (this.debug) console.log(`${colors.purple}Debug:${reset} New highest block updating ${colors.green}topTile to ${this.board.data[y][x]}${reset}.`);
+                        this.topTile = this.board.data[y][x];
+                        if (this.topTile === 2048) {
+                            if (this.debug) console.log(`${colors.purple}Debug:${reset} Game win, reached 2048.`);
+                            this.board.win = true;
                         }
                     };
                     y--;
