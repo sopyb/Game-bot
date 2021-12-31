@@ -14,7 +14,7 @@ class Game {
 
 
     moveLeft() {
-        let cache = Object.assign({}, this.board)
+        let cache = JSON.stringify(this.board.data)
 
         for (let y = 0; y < this.board.data.length; y++) {
             for (let x = 0; x < this.board.data[y].length; x++) {
@@ -27,17 +27,17 @@ class Game {
                         this.board.data[y][x] = this.board.data[y][copyX]*2
                         this.board.score += this.board.data[y][copyX]
                         this.board.data[y][copyX] = 0
-                    } else if (this.board.data[y][copyX] != 0) x++
+                    } else if (this.board.data[y][copyX] != 0) break;
                     copyX++;
                 }
             }
         }
 
-        if (!this.board.data.every((e,y) => e.every((f,x) => f = cache.data[y][x]))) this._summonBlock() //if board state changed summon new block
+        if (JSON.stringify(cache.data) != JSON.stringify(this.board.data)) this._summonBlock() //if board state changed summon new block
     }
 
     moveRight() {
-        let cache = Object.assign({}, this.board)
+        let cache = JSON.stringify(this.board.data)
 
         for (let y = 0; y < this.board.data.length; y++) {
             for (let x = this.board.data[y].length-1; x >= 0 ; x--) {
@@ -50,17 +50,17 @@ class Game {
                         this.board.data[y][x] = this.board.data[y][copyX]*2
                         this.board.score += this.board.data[y][copyX]
                         this.board.data[y][copyX] = 0
-                    } else if (this.board.data[y][copyX] != 0) x--
+                    } else if (this.board.data[y][copyX] != 0) break;
                     copyX--;
                 }
             }
         }
 
-        if (!this.board.data.every((e,y) => e.every((f,x) => f = cache.data[y][x]))) this._summonBlock() //if board state changed summon new block
+        if (JSON.stringify(cache.data) != JSON.stringify(this.board.data)) this._summonBlock() //if board state changed summon new block
     }
 
     moveUp() {
-        let cache = Object.assign({}, this.board)
+        let cache = JSON.stringify(this.board.data)
 
         for (let x = 0; x < this.board.data[0].length; x++) {
             for (let y = 0; y < this.board.data.length ; y++) {
@@ -73,17 +73,17 @@ class Game {
                         this.board.data[y][x] = this.board.data[copyY][x]*2
                         this.board.score += this.board.data[copyY][x]
                         this.board.data[copyY][x] = 0
-                    } else if (this.board.data[y][copyX] != 0) y++
+                    } else if (this.board.data[copyY][x] != 0) break;
                     copyY++;
                 }
             }
         }
 
-        if (!this.board.data.every((e,y) => e.every((f,x) => f = cache.data[y][x]))) this._summonBlock() //if board state changed summon new block
+        if (cache != JSON.stringify(this.board.data)) this._summonBlock() //if board state changed summon new block
     }
 
     moveDown() {
-        let cache = Object.assign({}, this.board)
+        let cache = JSON.stringify(this.board.data)
 
         for (let x = 0; x < this.board.data[0].length; x++) {
             for (let y = this.board.data.length-1; y >= 0 ; y--) {
@@ -97,13 +97,13 @@ class Game {
                         this.board.data[y][x] = this.board.data[copyY][x]*2
                         this.board.score += this.board.data[copyY][x]
                         this.board.data[copyY][x] = 0
-                    } else if (this.board.data[y][copyX] != 0) y--
+                    } else if (this.board.data[copyY][x] != 0) break;
                     copyY--;
                 }
             }
         }
 
-        if (!this.board.data.every((e,y) => e.every((f,x) => f = cache.data[y][x]))) this._summonBlock() //if board state changed summon new block
+        if (JSON.stringify(cache.data) != JSON.stringify(this.board.data)) this._summonBlock() //if board state changed summon new block
     }
 
     render() {
@@ -115,6 +115,10 @@ class Game {
             render += `\n`
         }
         return render;
+    }
+
+    _checkUpdate(cache) {
+        if (cache.data) a
     }
 
     _checkWin() {
@@ -129,7 +133,6 @@ class Game {
     }
 
     _summonBlock() {
-        if (this.board.topTile < 2048) this._checkWin()
         let freeSpots = new Array(), x, y, value;
 
         //checks if there are any free spots
@@ -147,6 +150,8 @@ class Game {
         } else {
             this.state.ongoing = false
         }
+
+        if (this.board.topTile < 2048) this._checkWin()
     }
 }
 

@@ -29,10 +29,11 @@ module.exports = {
             ],
             genEmbed = () => {return new MessageEmbed().setColor(colors.info).setAuthor({name: `2048!`, iconURL: message.author.displayAvatarURL()}).addField(`Score: ${game.board.score}`, game.render())},
             gameMsg = await message.channel.send({components, content: `${message.author}'s game`, embeds: [genEmbed()]}),
-            filter = (i) => i.isButton() && i.user.id == message.author.id,
+            filter = (i) => i.isButton(),
             collector = gameMsg.createMessageComponentCollector({filter, idle: 60000});
 
         collector.on('collect', i => {
+            if (i.user.id != message.author.id) return i.reply("You can't mess with other people's game... Meanie >:(");
             switch (i.customId) {
                 case "left":
                     game.moveLeft();
@@ -66,7 +67,7 @@ module.exports = {
             if (xpGot) db.add(`users`, message.author.id, `xp`, xpGot);
 
             gameMsg.edit({components: [], embeds: [genEmbed().setColor(game.state.win ? colors.win : colors.error)
-                .setDescription(`Game ended, you ${game.state.win ? `won` : `lost`}. **+${xpGot}xp**\n${game.state.ongoing ? `Game stopped` : `No moves left.`}${newLevel != oldLevel ? `\n\n**Level up!** You're now level ${newLevel}!` : ``}`)]})
+                .setDescription(`Game ended, you ${game.state.win ? `won` : `lost`}. **+${xpGot}xp**\n${game.state.ongoing ? `Game was ended by an external event` : `No moves left.`}${newLevel != oldLevel ? `\n\n**Level up!** You're now level ${newLevel}!` : ``}`)]})
         })
     }
 }
