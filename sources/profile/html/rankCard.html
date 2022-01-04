@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            @font-face {
+                font-family: 'Arimo';
+                src: url('../fonts/oswald..ttf') format('truetype');
+            }
+
+            :root {
+                --xp-color: 230, 213, 25;
+            }
+
+            p, span {
+                font-size: 3vh;
+                font-family: 'Arimo';
+                color: var(--text-color);
+                margin: 1vh;
+                display: block;
+                white-space: nowrap;
+                overflow: hidden;
+            } 
+
+            p {
+                text-overflow: ellipsis;
+            }
+
+            body {
+                margin: 0px;
+                width: 100vw;
+                max-width: 100%;
+                height: 100vh;
+
+                background-image: var(--background);
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: cover;
+            }
+
+            .title {
+                font-size: 4vh;
+            }
+
+            .center {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+            
+            .modalBody {
+                background-color: rgba(var(--card-color), 0.75);
+                width: 80vw;
+                height: 75vh;
+                margin-top: 5vh;
+
+                display: flex;
+                flex-direction: column;
+            }
+
+            .userInfo {
+                background-color: rgba(var(--card-color), 0.75);
+                padding: 1vh 0vh;
+            }
+
+
+            #profilePicture {
+                background-image: var(--profilePicture);
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: cover;
+                height: 20vw;
+                width: 20vw;
+                border: var(--text-color) solid 1vh;
+                border-radius: 50%;
+                margin: -10vw 1vw 0px;
+                float: left;
+            }
+
+            #username {
+                font-size: 4vh;
+            }
+
+            #username::after {
+                content: var(--username);
+                font-size: 8vh
+            }
+
+            #title::after {
+                content: var(--title);
+                font-size: 4vh;
+            }
+
+            .xp {
+                background-color: rgba(var(--xp-color), 0.4);
+                padding: 1vh 3vh;
+            }
+
+            #level {
+                margin-top: -0.5vh;
+                background-color: rgb(var(--card-color));
+                height: 10vh;
+                line-height: 10vh;
+                width: 10vh;
+                text-align: center;
+                border: var(--text-color) solid 0.5vh;
+
+                float: left;
+                border-radius: 50%;
+            }
+
+            #level span {
+                font-size: 5vh;
+                display: inline-block;
+                vertical-align: middle;
+                line-height: normal;
+                font-weight: bold;
+            }
+
+            #level span::after {
+                content: var(--level);
+            }
+
+            #xpBar {
+                overflow: hidden;
+                display: inline-block;
+                width: 70%;
+                height: 7vh;
+                border: var(--text-color) solid 0.5vh;
+                margin: 1vh 0vh;
+                margin-left: 1.5vh;
+
+                border-radius: 5vh;
+            }
+
+            .progress {
+                background-color: rgba(var(--xp-color), 0.7);
+                width: var(--progress);
+                margin: 0%;
+                float: left;
+            }
+
+            .progress span::after {
+                content: var(--xp);
+                color: #333;
+            }
+
+            .left {
+                margin-left: var(--progress);
+                background-color: rgba(var(--card-color), 0.7);
+            }
+
+            .left span::after {
+                content: var(--xpRequired);
+            }
+
+            .progress, .left {
+                height: 7vh;
+                line-height: 7vh;
+                text-align: right;
+                direction: rtl;
+            }
+
+            .progress span, .left span {
+                margin: 0 1vw;
+                font-size: 3vh;
+                display: inline-block;
+                vertical-align: middle;
+                line-height: normal;
+                font-weight: bold;
+            }
+
+            .progressText {
+                margin-top: 2.5vh;
+                float: right;
+                font-size: 5vh;
+                font-weight: bold;
+            }
+
+            .progressText::after {
+                content: var(--progress-string);
+            }
+
+            .extra{
+                display: flex;
+                flex-grow: 1;
+            }
+
+            .badges {
+                width: 30%;
+                background-color: rgba(var(--card-color), 0.75);
+            }
+
+            .playerInfo {
+                display: flex;
+                flex-grow: 1;
+                flex-direction: column;
+            }
+
+            .stats{
+                height: 20vh;
+                background-color: rgba(var(--card-color), 0.6);
+            }
+
+            .aboutMe {
+                flex-grow: 1;
+            }
+
+            .description::after {
+                content: var(--description);
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="modalBody center">
+            <div class="userInfo">
+                <div id="profilePicture"></div>
+                <p id="username"></p>
+                <p id="title"></p>
+            </div>
+
+            <div class="xp">
+                <div id="level">
+                    <span></span>
+                </div>
+                <div id="xpBar">
+                    <div class="progress"><span></span></div>
+                    <div class="left"><span></span></div>
+                </div>
+
+                <p class="progressText"></p>
+            </div>
+
+            <div class="extra">
+                <div class="badges">
+                    <p class="title">Badges</p>
+                    <p>Comming soon!</p>
+                </div>
+
+                <div class="playerInfo">
+                    <div class="stats">
+                        <p class="title">User stats</p>
+                        <p>Comming soon!</p>
+                    </div>
+
+                    <div class="aboutMe">
+                        <p class="title">About me!</p>
+                        <p class="description"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
