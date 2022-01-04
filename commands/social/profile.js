@@ -28,7 +28,7 @@ module.exports = {
             averageColor = await getAverageColor(Buffer.from(backgroundBuffer.data, 'utf8'), {step: 50})
 
         let profilecard = await (await captureWebsite).default.buffer(`./sources/profile/html/rankCard.html`, {
-            width: 800, height: 600,
+            width: 800, height: 600, launchOptions: {args: ['--no-sandbox','--disable-setuid-sandbox']},
             styles: [`
             :root {
                 --background: url("data:image/png;base64,${background}");
