@@ -27,7 +27,7 @@ class Game {
                         this.board.data[y][x] = this.board.data[y][copyX]*2
                         this.board.score += this.board.data[y][copyX]
                         this.board.data[y][copyX] = 0
-                        break
+                        break;
                     } else if (this.board.data[y][copyX] != 0) break;
                     copyX++;
                 }
@@ -51,7 +51,7 @@ class Game {
                         this.board.data[y][x] = this.board.data[y][copyX]*2
                         this.board.score += this.board.data[y][copyX]
                         this.board.data[y][copyX] = 0
-                        break
+                        break;
                     } else if (this.board.data[y][copyX] != 0) break;
                     copyX--;
                 }
@@ -75,7 +75,7 @@ class Game {
                         this.board.data[y][x] = this.board.data[copyY][x]*2
                         this.board.score += this.board.data[copyY][x]
                         this.board.data[copyY][x] = 0
-                        break
+                        break;
                     } else if (this.board.data[copyY][x] != 0) break;
                     copyY++;
                 }
@@ -100,7 +100,7 @@ class Game {
                         this.board.data[y][x] = this.board.data[copyY][x]*2
                         this.board.score += this.board.data[copyY][x]
                         this.board.data[copyY][x] = 0
-                        break
+                        break;
                     } else if (this.board.data[copyY][x] != 0) break;
                     copyY--;
                 }

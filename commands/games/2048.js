@@ -33,7 +33,7 @@ module.exports = {
             collector = gameMsg.createMessageComponentCollector({filter, idle: 60000});
 
         collector.on('collect', i => {
-            if (i.user.id != message.author.id) return i.reply("You can't mess with other people's game... Meanie >:(");
+            if (i.user.id != message.author.id) return i.reply({content: "You can't mess with other people's game... Meanie >:(", ephemeral: true});
             switch (i.customId) {
                 case "left":
                     game.moveLeft();
