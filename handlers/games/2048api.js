@@ -23,7 +23,7 @@ class Game {
                     if (this.board.data[y][copyX] != 0 && this.board.data[y][x] == 0) {
                         this.board.data[y][x] = this.board.data[y][copyX]
                         this.board.data[y][copyX] = 0
-                    } else if (this.board.data[y][copyX] == this.board.data[y][x]) {
+                    } else if (this.board.data[y][copyX] == this.board.data[y][x] && this.board.data[y][x] != 0) {
                         this.board.data[y][x] = this.board.data[y][copyX]*2
                         this.board.score += this.board.data[y][copyX]
                         this.board.data[y][copyX] = 0
@@ -47,7 +47,7 @@ class Game {
                     if (this.board.data[y][copyX] != 0 && this.board.data[y][x] == 0) {
                         this.board.data[y][x] = this.board.data[y][copyX]
                         this.board.data[y][copyX] = 0
-                    } else if (this.board.data[y][copyX] == this.board.data[y][x]) {
+                    } else if (this.board.data[y][copyX] == this.board.data[y][x] && this.board.data[y][x] != 0) {
                         this.board.data[y][x] = this.board.data[y][copyX]*2
                         this.board.score += this.board.data[y][copyX]
                         this.board.data[y][copyX] = 0
@@ -71,7 +71,7 @@ class Game {
                     if (this.board.data[copyY][x] != 0 && this.board.data[y][x] == 0) {
                         this.board.data[y][x] = this.board.data[copyY][x]
                         this.board.data[copyY][x] = 0
-                    } else if (this.board.data[copyY][x] == this.board.data[y][x]) {
+                    } else if (this.board.data[copyY][x] == this.board.data[y][x] && this.board.data[y][x] != 0) {
                         this.board.data[y][x] = this.board.data[copyY][x]*2
                         this.board.score += this.board.data[copyY][x]
                         this.board.data[copyY][x] = 0
@@ -96,7 +96,7 @@ class Game {
                         this.board.data[y][x] = this.board.data[copyY][x]
                         this.board.data[copyY][x] = 0
 
-                    } else if (this.board.data[copyY][x] == this.board.data[y][x]) {
+                    } else if (this.board.data[copyY][x] == this.board.data[y][x] && this.board.data[y][x]) {
                         this.board.data[y][x] = this.board.data[copyY][x]*2
                         this.board.score += this.board.data[copyY][x]
                         this.board.data[copyY][x] = 0

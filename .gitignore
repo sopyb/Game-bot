@@ -1,7 +1,7 @@
 .env
 .vscode
+.replit
 node_modules
 Unused
-test.js
-out.png
 database.db
+replit.nix
