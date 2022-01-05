@@ -76,6 +76,8 @@
                 width: 80vw;
                 height: 75vh;
                 margin-top: 5vh;
+                border-radius: 2vh;
+                border-bottom-right-radius: 10vh;
 
                 display: flex;
                 flex-direction: column;
@@ -83,6 +85,8 @@
 
             .userInfo {
                 background-color: rgba(var(--card-color), 0.75);
+                border-top-left-radius: 2vh;
+                border-top-right-radius: 2vh;
                 padding: 1vh 0vh;
             }
 
@@ -121,11 +125,11 @@
 
             .xp {
                 background-color: rgba(var(--xp-color), 0.4);
-                padding: 1vh 3vh;
+                padding: 1vh 2vh;
             }
 
             #level {
-                margin-top: -0.5vh;
+                margin: -0.5vh 0vh;
                 background-color: rgb(var(--card-color));
                 height: 10vh;
                 line-height: 10vh;
@@ -152,11 +156,11 @@
             #xpBar {
                 overflow: hidden;
                 display: inline-block;
-                width: 70%;
+                width: 55vw;
                 height: 7vh;
                 border: var(--text-color) solid 0.5vh;
                 margin: 1vh 0vh;
-                margin-left: 1.5vh;
+                margin-left: 1vh;
 
                 border-radius: 5vh;
             }
@@ -203,7 +207,9 @@
                 margin-top: 2vh;
                 float: right;
                 font-size: 5vh;
+                margin-left: 0;
                 font-weight: bold;
+                margin-bottom: 0;
             }
 
             .progressText::after {
@@ -218,6 +224,7 @@
             .badges {
                 width: 30%;
                 background-color: rgba(var(--card-color), 0.75);
+                border-bottom-left-radius: 2vh;
             }
 
             .playerInfo {
