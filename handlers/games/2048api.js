@@ -34,7 +34,7 @@ class Game {
             }
         }
 
-        if (JSON.stringify(cache.data) != JSON.stringify(this.board.data)) this._summonBlock() //if board state changed summon new block
+        if (cache != JSON.stringify(this.board.data)) this._summonBlock() //if board state changed summon new block
     }
 
     moveRight() {
@@ -58,7 +58,7 @@ class Game {
             }
         }
 
-        if (JSON.stringify(cache.data) != JSON.stringify(this.board.data)) this._summonBlock() //if board state changed summon new block
+        if (cache != JSON.stringify(this.board.data)) this._summonBlock() //if board state changed summon new block
     }
 
     moveUp() {
@@ -107,7 +107,7 @@ class Game {
             }
         }
 
-        if (JSON.stringify(cache.data) != JSON.stringify(this.board.data)) this._summonBlock() //if board state changed summon new block
+        if (cache != JSON.stringify(this.board.data)) this._summonBlock() //if board state changed summon new block
     }
 
     render() {
