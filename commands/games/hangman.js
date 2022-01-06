@@ -17,7 +17,7 @@ module.exports = {
         let game = new Game(),
             start = Date.now(),
             genEmbed = () => {return new MessageEmbed().setColor(colors.info).setAuthor({name: "Hangman", iconURL: message.author.displayAvatarURL()}).addField(`Health: ${"❤️".repeat(6-game.strikeCount)}${"💔".repeat(game.strikeCount)}`, game.render())},
-            gameMsg = await message.channel.send({embeds: [genEmbed().setDescription(`Type your guesses in the chat.\n\nYou can use \`end\` to end the game now.`)]}),
+            gameMsg = await message.channel.send({content: `${message.author}'s game`,  embeds: [genEmbed().setDescription(`Type your guesses in the chat.\n\nYou can use \`end\` to end the game now.`)]}),
             responseRegex = new RegExp(`^[a-z]$|^${`[a-z]`.repeat(game.word.length)}$|^end$`, "mi"),
             filter = (m) => m.author.id == message.author.id && m.content.match(responseRegex),
             collector = message.channel.createMessageCollector({filter, idle: 60000})
@@ -29,7 +29,7 @@ module.exports = {
             game.guess(m.content)
             if (!game.state.ongoing) return collector.stop();
 
-            gameMsg.edit({embeds: [genEmbed().setDescription(`Type your guesses in the chat.\n\nYou can use \`end\` to end the game now.`)]})
+            gameMsg.edit({content: `${message.author}'s game`,  embeds: [genEmbed().setDescription(`Type your guesses in the chat.\n\nYou can use \`end\` to end the game now.`)]})
         })
 
         collector.on("end", async () => {
@@ -47,7 +47,7 @@ module.exports = {
             
             if (xpGot) db.add(`users`, message.author.id, `xp`, xpGot);
 
-            gameMsg.edit({embeds: [genEmbed()
+            gameMsg.edit({content: `${message.author}'s game`,  embeds: [genEmbed()
                                     .setColor(game.state.win ? colors.win : colors.error)
                                     .setDescription(`Game ended, you ${game.state.win ? `won` : `lost`}. **+${xpGot}xp**\n${game.state.win ? `You guessed the word correctly!` : game.state.ongoing ? `Game stopped` : `You perished.`}${newLevel != oldLevel ? `\n\n**Level up!** You're now level ${newLevel}!` : ``}`)
 

@@ -16,7 +16,7 @@ module.exports = {
         let game = new Game(),
             start = Date.now(),
             genEmbed = () => {return new MessageEmbed().setColor(colors.info).setAuthor({name: "Minesweeper", iconURL: message.author.displayAvatarURL()}).addField("Board", game.render())},
-            gameMsg = await message.channel.send({embeds: [genEmbed().setDescription(`To open a tile write the tile coordinate in chat.\nTo flag it, add F to the coordinate.\n\`Ex. C4F\`\n\nYou can use \`end\` to end the game now.`)]}),
+            gameMsg = await message.channel.send({content: `${message.author}'s game`,  embeds: [genEmbed().setDescription(`To open a tile write the tile coordinate in chat.\nTo flag it, add F to the coordinate.\n\`Ex. C4F\`\n\nYou can use \`end\` to end the game now.`)]}),
             responseRegex = /^[A-I][1-9]F?|^end$/mi,
             filter = (m) => m.author.id == message.author.id && m.content.match(responseRegex),
             collector = message.channel.createMessageCollector({filter, idle: 60000})
@@ -38,7 +38,7 @@ module.exports = {
 
             if (!game.state.ongoing) return collector.stop();
 
-            gameMsg.edit({embeds: [genEmbed().setDescription(`To open a tile write the tile coordinate in chat.\nTo flag it, add F to the coordinate.\n\`Ex. C4F\`\n\nYou can use \`end\` to end the game now.`)]})
+            gameMsg.edit({content: `${message.author}'s game`,  embeds: [genEmbed().setDescription(`To open a tile write the tile coordinate in chat.\nTo flag it, add F to the coordinate.\n\`Ex. C4F\`\n\nYou can use \`end\` to end the game now.`)]})
         })
 
         collector.on("end", async () => {
@@ -66,7 +66,7 @@ module.exports = {
             
             if (xpGot) db.add(`users`, message.author.id, `xp`, xpGot);
 
-            gameMsg.edit({embeds: [genEmbed().setColor(game.state.win ? colors.win : colors.error)
+            gameMsg.edit({content: `${message.author}'s game`,  embeds: [genEmbed().setColor(game.state.win ? colors.win : colors.error)
                 .setDescription(`Game ended, you ${game.state.win ? `won` : `lost`}. **+${xpGot}xp**\n${game.state.win ? `You found all the bombs!` : game.state.ongoing ? `Game stopped` : `You dug a bomb.`}${newLevel != oldLevel ? `\n\n**Level up!** You're now level ${newLevel}!` : ``}`)]})
         })
     }
