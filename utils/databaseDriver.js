@@ -19,8 +19,18 @@ async function initDb() {
             ID PRIMARY KEY,
             xp INTEGER DEFAULT 0,
             balance INTEGER DEFAULT 0,
-            description TEXT
+            description TEXT,
+            title INTEGER,
+            inventory TEXT,
+            stats TEXT
         )`);
+
+        /*  Update old database
+
+            ALTER TABLE users ADD title INTEGER;
+            ALTER TABLE users ADD inventory TEXT;
+            ALTER TABLE users ADD stats TEXT;
+        */
     }).catch(e => console.log(e));
 }
 
@@ -28,6 +38,12 @@ async function get(table, ID, query) {
     let result = await db.get(`SELECT ${query} FROM ${table} WHERE ID = "${ID}";`);
 
     return result?.[Object.keys?.(result)?.[0]];
+}
+
+async function all(table, ID) {
+    let result = await db.get(`SELECT * FROM ${table} WHERE ID = "${ID}";`);
+
+    return result;
 }
 
 async function set(table, ID, query, value) {
@@ -52,12 +68,13 @@ async function add(table, ID, query, value) {
     await set(table, ID, query, value);
 }
 
-process.on("exit", () => global.db.close())
+process.on("exit", () => db.close())
 
 
 module.exports = {
     initDb,
     get,
+    all,
     set,
     add
 }
