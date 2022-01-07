@@ -19,15 +19,17 @@ async function initDb() {
             ID PRIMARY KEY,
             xp INTEGER DEFAULT 0,
             balance INTEGER DEFAULT 0,
+            cardBackground INTEGER DEFAULT 0
+            title INTEGER DEFAULT 0,
             description TEXT,
-            title INTEGER,
             inventory TEXT,
             stats TEXT
         )`);
 
         /*  Update old database
 
-            ALTER TABLE users ADD title INTEGER;
+            ALTER TABLE users ADD cardBackground INTEGER DEFAULT 0
+            ALTER TABLE users ADD title INTEGER DEFAULT 0;
             ALTER TABLE users ADD inventory TEXT;
             ALTER TABLE users ADD stats TEXT;
         */
