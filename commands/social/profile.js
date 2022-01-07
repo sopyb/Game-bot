@@ -1,6 +1,6 @@
 const { MessageAttachment } = require('discord.js'),
-    { convertXp } = require(`${process.cwd()}/utils/xpUtils`),
-    db = require(`${process.cwd()}/utils/databaseDriver`),
+    { convertXp } = require(`../../utils/xpUtils`),
+    db = require(`../../utils/databaseDriver`),
     { getAverageColor } = require('fast-average-color-node'),
     captureWebsite = import('capture-website'),
     axios = require('axios')
@@ -14,17 +14,17 @@ module.exports = {
     ussage: "profile [@user/userID]",
     run: async function(message, args) {
         let target = message.mentions.members.first() || message.member,
+            targetData = await db.all(`users`, target.id),
             backgroundURL = "https://cdn.discordapp.com/attachments/826472420143136809/826495407537913927/IMG_20200827_194512-EFFECTS.jpg",
             backgroundBuffer = await axios.get(backgroundURL, { responseType: 'arraybuffer' }),
             background = Buffer.from(backgroundBuffer.data, 'utf8').toString('base64')
             userAvatar = await axios.get(target.displayAvatarURL({format:'png'}), { responseType: 'arraybuffer' }).then(response => Buffer.from(response.data, 'utf8').toString('base64')),
             username = target.displayName,
             title = "No title displayed :0",
-            xpInfo = convertXp(await db.get(`users`, target.id, `xp`)),
-            level = xpInfo.level,
+            xpInfo = convertXp(targetData.xp),
             fillratio = xpInfo.xp/ xpInfo.xpRequired,
             percent = (Math.floor(fillratio * 1000)/10).toLocaleString('en-US', {minimumIntegerDigits: 2, maximumIntegerDigits: 2, minimumFractionDigits: 1, maximumFractionDigits: 1}),
-            description = "No description set",
+            description = targetData.description || "No description set",
             averageColor = await getAverageColor(Buffer.from(backgroundBuffer.data, 'utf8'), {step: 50})
 
         let profilecard = await (await captureWebsite).default.buffer(`./sources/profile/html/rankCard.html`, {
@@ -37,7 +37,7 @@ module.exports = {
                 --profilePicture: url("data:image/png;base64,${userAvatar}");
                 --username: "${username}";
                 --title: "${title}";
-                --level: "${level}";
+                --level: "${xpInfo.level}";
                 --xp: "${xpInfo.xp}xp";
                 --xpRequired: "${xpInfo.xpRequired}xp";
                 --progress: ${percent}%;

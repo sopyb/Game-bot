@@ -19,7 +19,7 @@ async function initDb() {
             ID PRIMARY KEY,
             xp INTEGER DEFAULT 0,
             balance INTEGER DEFAULT 0,
-            cardBackground INTEGER DEFAULT 0
+            cardBackground INTEGER DEFAULT 0,
             title INTEGER DEFAULT 0,
             description TEXT,
             inventory TEXT,
