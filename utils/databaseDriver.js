@@ -49,7 +49,7 @@ async function all(table, ID) {
 }
 
 async function set(table, ID, query, value) {
-    let result = await get(table, ID, query);
+    let result = await get(table, ID, "*");
 
     if(typeof value === "string") {
         value = `"${value}"`
@@ -63,7 +63,7 @@ async function set(table, ID, query, value) {
 }
 
 async function add(table, ID, query, value) {
-    let result = await get(table, ID, query)
+    let result = await get(table, ID, "*")
 
     value += result ?? 0;
 
