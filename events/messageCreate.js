@@ -26,7 +26,7 @@ client.on('messageCreate',async (message) => {
     if (!message.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR) && cmdfile.reqperms) {
         for (perm of cmdfile.reqperms) {
             if (!message.member.permissions.has(perm)) {
-                return message.reply(`You're missing permissions to execute the command.`);
+                return message.reply(`You're missing permissions to execute the command.`).then((msg) =>setTimeout(() => {msg.delete().catch(console.error)}, 3000));
             }
         }
     }
@@ -43,7 +43,7 @@ client.on('messageCreate',async (message) => {
         } else {
             let wearoff = cooldowns.get(message.author.id)
             if (time <= wearoff) {
-                return message.channel.send(`You're being rate limited. You can use that command again in ${(Math.ceil((wearoff-time)/10)/100).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}s`)
+                return message.reply({content: `You're being rate limited. You can use that command again in ${(Math.ceil((wearoff-time)/10)/100).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}s`}).then((msg) =>setTimeout(() => {msg.delete().catch(console.error)}, 3000))
             } else {
                 cooldowns.set(message.author.id, time + (cmdcooldown * 1000));
             }
