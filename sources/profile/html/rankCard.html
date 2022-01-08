@@ -217,29 +217,38 @@
             }
 
             .extra{
+                max-height:45.5vh;
+                overflow: hidden;
                 display: flex;
-                flex-grow: 1;
             }
 
             .badges {
-                width: 30%;
+                width: 20vw;
                 background-color: rgba(var(--card-color), 0.75);
                 border-bottom-left-radius: 2vh;
             }
 
             .playerInfo {
                 display: flex;
-                flex-grow: 1;
+                width: 60vw;
                 flex-direction: column;
             }
 
             .stats{
+                width: 60vw;
                 height: 20vh;
                 background-color: rgba(var(--card-color), 0.6);
             }
 
             .aboutMe {
-                flex-grow: 1;
+                width: 60vw;
+            }
+
+            .description {
+                white-space: break-spaces;
+                overflow-wrap: break-word;
+                text-overflow: unset;
+                text-align: justify;
             }
 
             .description::after {
