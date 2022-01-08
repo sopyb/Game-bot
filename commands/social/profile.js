@@ -3,7 +3,9 @@ const { MessageAttachment } = require('discord.js'),
     db = require(`../../utils/databaseDriver`),
     { getAverageColor } = require('fast-average-color-node'),
     captureWebsite = import('capture-website'),
-    axios = require('axios')
+    axios = require('axios'),
+    backgrounds = require("../../sources/profile/data/backgrounds.json"),
+    titles = require("../../sources/profile/data/titles.json")
 
 module.exports = {
     name: 'profile',
@@ -15,16 +17,16 @@ module.exports = {
     run: async function(message, args) {
         let target = message.mentions.members.first() || message.member,
             targetData = await db.all(`users`, target.id),
-            backgroundURL = "https://cdn.discordapp.com/attachments/826472420143136809/826495407537913927/IMG_20200827_194512-EFFECTS.jpg",
+            backgroundURL = backgrounds.find((v) => v.id == (targetData?.cardBackground || 0)).value,
             backgroundBuffer = await axios.get(backgroundURL, { responseType: 'arraybuffer' }),
             background = Buffer.from(backgroundBuffer.data, 'utf8').toString('base64')
             userAvatar = await axios.get(target.displayAvatarURL({format:'png'}), { responseType: 'arraybuffer' }).then(response => Buffer.from(response.data, 'utf8').toString('base64')),
             username = target.displayName,
-            title = "No title displayed :0",
-            xpInfo = convertXp(targetData.xp),
+            title = titles.find((v) => v.id == (targetData?.title || 0)).value,
+            xpInfo = convertXp(targetData?.xp || 0),
             fillratio = xpInfo.xp/ xpInfo.xpRequired,
             percent = (Math.floor(fillratio * 1000)/10).toLocaleString('en-US', {minimumIntegerDigits: 2, maximumIntegerDigits: 2, minimumFractionDigits: 1, maximumFractionDigits: 1}),
-            description = targetData.description || "No description set",
+            description = targetData?.description || "No description set",
             averageColor = await getAverageColor(Buffer.from(backgroundBuffer.data, 'utf8'), {step: 50})
 
         let profilecard = await (await captureWebsite).default.buffer(`./sources/profile/html/rankCard.html`, {
