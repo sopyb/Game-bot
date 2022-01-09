@@ -1,0 +1,27 @@
+{
+    "general": 
+        [
+            {"id": -1, "itemsGranted": {"titles": [-1]}, "coinsGranted": 0, "condition": "client.config.ownerID.includes(message.author.id)"},
+            {"id": 10, "name": "Path to supreme gamer", "description": "Reach level 1 by playing games", "itemsGranted": {"titles": [10]}, "coinsGranted": 50, "condition": "xpInfo.level >= 1"},
+            {"id": 11, "name": "Path to supreme gamer", "description": "Reach level 5 by playing games", "itemsGranted": {"titles": [11]}, "coinsGranted": 250, "condition": "xpInfo.level >= 5"},
+            {"id": 12, "name": "Path to supreme gamer", "description": "Reach level 10 by playing games", "itemsGranted": {"titles": [12]}, "coinsGranted": 500, "condition": "xpInfo.level >= 10"},
+            {"id": 13, "name": "Path to supreme gamer", "description": "Reach level 15 by playing games", "itemsGranted": {"titles": [13]}, "coinsGranted": 750, "condition": "xpInfo.level >= 15"},
+            {"id": 14, "name": "Path to supreme gamer", "description": "Reach level 20 by playing games", "itemsGranted": {"titles": [14]}, "coinsGranted": 1000, "condition": "xpInfo.level >= 20"},
+            {"id": 15, "name": "Path to supreme gamer", "description": "Reach level 25 by playing games", "itemsGranted": {"titles": [15]}, "coinsGranted": 1000, "condition": "xpInfo.level >= 25"},
+            {"id": 16, "name": "Path to supreme gamer", "description": "Reach level 30 by playing games", "itemsGranted": {"titles": [16]}, "coinsGranted": 1000, "condition": "xpInfo.level >= 30"},
+            {"id": 17, "name": "Path to supreme gamer", "description": "Reach level 35 by playing games", "itemsGranted": {"titles": [17]}, "coinsGranted": 1000, "condition": "xpInfo.level >= 35"},
+            {"id": 18, "name": "Path to supreme gamer", "description": "Reach level 40 by playing games", "itemsGranted": {"titles": [18]}, "coinsGranted": 1000, "condition": "xpInfo.level >= 40"},
+            {"id": 19, "name": "Path to supreme gamer", "description": "Reach level 45 by playing games", "itemsGranted": {"titles": [19]}, "coinsGranted": 1000, "condition": "xpInfo.level >= 45"},
+            {"id": 20, "name": "Path to supreme gamer", "description": "Reach level 50 by playing games", "itemsGranted": {"titles": [20]}, "coinsGranted": 1000, "condition": "xpInfo.level >= 50"},
+            {"id": 21, "name": "Path to supreme gamer", "description": "Reach level 60 by playing games", "itemsGranted": {"titles": [21]}, "coinsGranted": 1000, "condition": "xpInfo.level >= 60"},
+            {"id": 22, "name": "Path to supreme gamer", "description": "Reach level 70 by playing games", "itemsGranted": {"titles": [22]}, "coinsGranted": 1000, "condition": "xpInfo.level >= 70"},
+            {"id": 23, "name": "Path to supreme gamer", "description": "Reach level 80 by playing games", "itemsGranted": {"titles": [23]}, "coinsGranted": 1000, "condition": "xpInfo.level >= 80"},
+            {"id": 24, "name": "Path to supreme gamer", "description": "Reach level 90 by playing games", "itemsGranted": {"titles": [24]}, "coinsGranted": 1000, "condition": "xpInfo.level >= 90"},
+            {"id": 25, "name": "Path to supreme gamer", "description": "Reach level 100 by playing games", "itemsGranted": {"titles": [25]}, "coinsGranted": 1000, "condition": "xpInfo.level >= 100"}
+        ],
+    "games": {
+        "universal": [
+            {"id": 0, "name": "Incredible speeds", "description": "Win a game in under 2 minutes", "itemsGranted": {"titles": [100]}, "coinsGranted": 250, "condition": "time <= 2"}
+        ]
+    }
+}
