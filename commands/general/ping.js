@@ -6,7 +6,7 @@ module.exports = {
     category: 'info',
     shortdescription: `Ping! Pong!`,
     description: `Check bot's latency to discord's API.`,
-    ussage: "ping",
+    usage: "ping",
     run: function(message, args) {
         let embed = new MessageEmbed().setAuthor({name: `Ping`, iconURL: message.author.displayAvatarURL()}).setColor(colors.info).setDescription(`Pinging...`);
         message.channel.send({embeds: [embed]}).then(msg => {

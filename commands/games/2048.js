@@ -9,7 +9,7 @@ module.exports = {
     category: "games",
     shortdescription: "Join the numbers and get to the 2048 tile!",
     description: "Join the numbers and get to the 2048 tile!\n\_\_\*\*Playing on a mobile device is advised for the best experience.\*\*\_\_\n\nUse the arrow reactions move the tiles. Tiles with the same number merge into one when they touch. Add them up to reach 2048 and beyond!",
-    ussage: "2048",
+    usage: "2048",
     run: async function(message, args) {
         let game = new Game(),
             start = Date.now(),

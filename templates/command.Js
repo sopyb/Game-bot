@@ -5,7 +5,7 @@ module.exports = {
     cooldown: 5,
     shortdescription: "",
     description: "",
-    ussage: "",
+    usage: "",
     reqperms: [],
     run: (message, args, prefix) => {
         //code here

@@ -13,7 +13,7 @@ module.exports = {
     shortdescription: undefined,
     description: undefined,
     cooldown: 60,
-    ussage: "profile [@user/userID]",
+    usage: "profile [@user/userID]",
     run: async function(message, args) {
         let target = message.mentions.members.first() || args[0] ? await message.guild.members.fetch(args[0]).catch(console.log) : null || message.member,
             targetData = await db.all(`users`, target.id),

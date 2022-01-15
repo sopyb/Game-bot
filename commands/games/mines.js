@@ -10,7 +10,7 @@ module.exports = {
     category: "games",
     shortdescription: "Try to discover all the mines without blowing up!",
     description: "Try to discover all tiles under which there's bombs, each tile you open will show you how many bombs are around it around it,",
-    ussage: "minesweeper",
+    usage: "minesweeper",
     reqperms: [],
     run: async (message, args, prefix) => {
         let game = new Game(),

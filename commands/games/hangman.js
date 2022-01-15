@@ -11,7 +11,7 @@ module.exports = {
     cooldown: 5,
     shortdescription: "Guess the word to not be hanged",
     description: "Attempt to build the missing word by guessing one letter at a time. The game is won if the player correctly identifies the missing word without making more than 6 wrong guesses",
-    ussage: "hangman",
+    usage: "hangman",
     reqperms: [],
     run: async (message, args, prefix) => {
         let game = new Game(),

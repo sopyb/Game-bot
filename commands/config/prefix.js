@@ -7,7 +7,7 @@ module.exports = {
     category: 'config',
     shortdescription: `Check prefix or set a new one.`,
     description: `Change the prefix of the server to a new one or check to see the curent prefix`,
-    ussage: "prefix [new prefix]",
+    usage: "prefix [new prefix]",
     reqperms: [Permissions.FLAGS.MANAGE_GUILD],
     run: (message, args, prefix) => {
         if (args[0]) {

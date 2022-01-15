@@ -11,7 +11,7 @@ module.exports = {
     category: 'info',
     shortdescription: `Provides info about commands.`,
     description: `Check all commands avalaible and info about each of them.`,
-    ussage: "help [command]",
+    usage: "help [command]",
     run: function(message, args, prefix) {
         let categories = client.commands.map(k => k.category).filter(onlyUnique),
             commands = (category) => {return client.commands.filter(k => k.category === category).map(k => `\`${k.name}\` - ${k.shortdescription || `No short description. :(`}`).sort().join(`\n`)};
@@ -24,7 +24,7 @@ module.exports = {
                 .setAuthor({name: command.name.charAt(0).toUpperCase() + command.name.slice(1), iconURL: message.author.displayAvatarURL()})
                 .setColor(colors.info)
                 .setDescription(command.description || `No description :c`)
-                .addField(`Ussage: ${prefix + command.ussage || `🤷 not documented.`}`, `Category: ${command.category}`)
+                .addField(`Ussage: ${prefix + command.usage || `🤷 not documented.`}`, `Category: ${command.category}`)
                 .setFooter(`Arguments in [] are optional while arguments in () are mandatory`, client.user.displayAvatarURL())
             message.channel.send({embeds: [embed]});
         } else {
