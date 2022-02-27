@@ -15,7 +15,7 @@ module.exports = {
     cooldown: 60,
     usage: "profile [@user/userID]",
     run: async function(message, args) {
-        let target = message.mentions.members.first() || args[0] ? await message.guild.members.fetch(args[0]).catch(console.log) : null || message.member,
+        let target = message.mentions.members.first() || await message.guild.members.fetch(args?.[0]).catch(console.log) || message.member
             targetData = await db.all(`users`, target.id),
             backgroundURL = backgrounds.find((v) => v.id == (targetData?.cardBackground || 0)).value,
             backgroundBuffer = await axios.get(backgroundURL, { responseType: 'arraybuffer' }),
