@@ -8,7 +8,7 @@ client.on('messageCreate',async (message) => {
     let prefix = await db.get(`servers`, message.guild.id, `prefix`);
     if (!prefix) prefix = client.config.prefix;
 
-    if (message.mentions.has(client.user.id)) {
+    if (message.content.includes(`<@${client.user.id}>`)) {
         return message.channel.send(`Hey there! My prefix is \`${prefix}\`.`);
     }
     if (!message.content.startsWith(prefix)) return;
