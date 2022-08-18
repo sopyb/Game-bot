@@ -126,7 +126,9 @@ class Game {
     }
 
     _checkWin() {
-        this.board.topTile = Math.max.apply(null, this.board.data.map(e => Math.max.apply(null, e)))
+        // top tile = max between null and values of flattened array
+        this.board.topTile = Math.max.apply(null, this.board.data.flat())
+
         if (this.board.topTile >= 2048) this.state.win = true
     }
 
@@ -137,6 +139,9 @@ class Game {
     }
 
     _summonBlock() {
+        //check if last win brought victory
+        this._checkWin()
+        
         let freeSpots = new Array(), x, y, value;
 
         //checks if there are any free spots
@@ -154,8 +159,6 @@ class Game {
         } else {
             this.state.ongoing = false
         }
-
-        if (this.board.topTile < 2048) this._checkWin()
     }
 }
 
