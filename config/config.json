@@ -1,18 +1,18 @@
 {
-    "prefix": "g!",
-    "ownerID": ["939490395887386646"],
-    "activity": [
-        {
-            "text": "all these people.",
-            "type": "WATCHING"
-        },
-        {
-            "text": "ruining Sopy's mental.",
-            "type": "COMPETING"
-        },
-        {
-            "text": "v0.2 - 100% more games.",
-            "type": "PLAYING"
-        }
-    ]
+  "prefix": "g!",
+  "ownerID": ["939490395887386646"],
+  "activity": [
+    {
+      "text": "all these people.",
+      "type": "WATCHING"
+    },
+    {
+      "text": "ruining Sopy's mental.",
+      "type": "COMPETING"
+    },
+    {
+      "text": "v0.2 - 100% more games.",
+      "type": "PLAYING"
+    }
+  ]
 }
