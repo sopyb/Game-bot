@@ -27,7 +27,7 @@ module.exports = {
                     new MessageButton().setStyle("PRIMARY").setCustomId('down').setLabel("\u2193"),
                     new MessageButton().setStyle("SECONDARY").setCustomId('blank3').setLabel(" ").setDisabled(true))
             ],
-            genEmbed = () => {return new MessageEmbed().setColor(colors.info).setAuthor({name: `${message.member.displayName}'s 2048! game`, iconURL: message.author.displayAvatarURL()}). setDescription(`**Score: ${game.board.score}**`)},
+            genEmbed = () => {return new MessageEmbed().setColor(colors.info).setAuthor({name: `${message.member.displayName}'s 2048! game`, iconURL: message.author.displayAvatarURL()}). setDescription(`**Score: ${game.board.score}**${game.board.win ? `\nYou already won but you can keep playing.` : ``}`)},
             gameMsg = await message.channel.send({components, content: game.render(), embeds: [genEmbed()]}),
             filter = (i) => i.isButton(),
             collector = gameMsg.createMessageComponentCollector({filter, idle: 60000});
@@ -67,7 +67,7 @@ module.exports = {
             if (xpGot) db.add(`users`, message.author.id, `xp`, xpGot);
 
             gameMsg.edit({content: game.render(), components: [], embeds: [genEmbed().setColor(game.state.win ? colors.win : colors.error)
-                .setDescription(`**Score: ${game.board.score}**\n\nGame ended, you ${game.state.win ? `won` : `lost`}. **+${xpGot}xp**\n${game.state.ongoing ? `Game was ended by an external event` : `No moves left.`}${newLevel != oldLevel ? `\n\n**Level up!** You're now level ${newLevel}!` : ``}`)]})
+                .setDescription(`**Score: ${game.board.score}**\nGame ended, you ${game.board.win ? `won` : `lost`}. **+${xpGot}xp**\n${game.state.ongoing ? `Game was ended by an external event` : `No moves left.`}${newLevel != oldLevel ? `\n\n**Level up!** You're now level ${newLevel}!` : ``}`)]})
         })
     }
 }
