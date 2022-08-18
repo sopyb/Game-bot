@@ -33,7 +33,7 @@ client.on('messageCreate',async (message) => {
     
     let cmdcooldown = cmdfile.cooldown ?? 5;
 
-    if (cmdcooldown !== 0) {
+    if (!client.config.ownerID.includes(message.author.id) && cmdcooldown !== 0) {
         if (!client.cooldown.has(cmdfile.name)) client.cooldown.set(cmdfile.name, new Collection());
 
         let cooldowns = client.cooldown.get(cmdfile.name)
