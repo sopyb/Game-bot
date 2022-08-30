@@ -30,9 +30,9 @@ module.exports = {
             let x = controls.charCodeAt(0) - 97,
                 y = parseInt(controls.charAt(1)) - 1
 
-            if (x < 1 || y < 1) return;
+            if (x < 0 || y < 0) return;
 
-            if (x > game.board.data?.[0].length || y > game.board.data.length) return;
+            if (x >= game.board.data?.[0].length || y >= game.board.data.length) return;
 
             if (controls.length == 3) {
                 game.flag(x,y)
